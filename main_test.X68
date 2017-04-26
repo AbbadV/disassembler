@@ -28,11 +28,11 @@ START:                  ; first instruction of program
     MOVE.W      #$4000,OUT_START_A
     MOVE.W      OUT_START_A,OUT_CURR_A
 
-    MOVE.W      #$23FC,$3000
-    *MOVE.L      #$23CF1234,$3002
-    MOVE.L      #$1234ABCD,$3002
+    MOVE.W      #$2b3c,$3000
+    MOVE.L      #$23CF1234,$3002
+    *MOVE.L      #$4000ABCD,$3002
     *MOVE.W      #$4E71,$3004
-    MOVE.L      #$0000FFFF,$3006
+    *MOVE.L      #$12345678,$3006
 
 LOOP
     JSR         CMD_IDENTIFY
@@ -96,6 +96,7 @@ IS_VALID             ds.b    1        ; stores whether or not the code is valid
 
 
         
+
 
 
 
