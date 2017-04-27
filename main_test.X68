@@ -24,25 +24,12 @@ START:                  ; first instruction of program
 
     MOVE.L      #$3000,IN_START_A
     MOVE.L      IN_START_A,IN_CURR_A
-    MOVE.L      #$301A,IN_END_A
+    MOVE.L      #$302A,IN_END_A
 
     MOVE.L      #$4000,OUT_START_A
     MOVE.L      OUT_START_A,OUT_CURR_A
+    
 
-    MOVE.W      #$4E71,$3000
-    MOVE.W      #$4E71,$3002
-    MOVE.W      #$2401,$3004
-    MOVE.W      #$2A0A,$3006
-    MOVE.W      #$2C1B,$3008
-    MOVE.W      #$21FC,$300A
-    MOVE.W      #$0000,$300C
-    MOVE.W      #$1234,$300E
-    MOVE.W      #$4000,$3010
-    MOVE.W      #$3E3C,$3012
-    MOVE.W      #$1234,$3014
-    MOVE.W      #$1E3C,$3016
-    MOVE.W      #$00CD,$3018
-    MOVE.W      #$4E71,$301A
 
 LOOP
     JSR         CMD_IDENTIFY
@@ -65,7 +52,7 @@ END_LOOP
     SIMHALT             ; halt simulator
 
 * Put variables and constants here
-  * INCLUDE     'OPCODE_TEST.X68'
+    INCLUDE     'OPCODE_TEST.X68'
     INCLUDE     'CmdIdentify.X68'
 
 WELCOME_MSG          dc.b    'Welcome to the Motorola MC68000 Microprocessor Disassembler',CR,LF,0   
@@ -106,6 +93,8 @@ IS_VALID             ds.b    1        ; stores whether or not the code is valid
 
 
         
+
+
 
 *~Font name~Courier New~
 *~Font size~10~

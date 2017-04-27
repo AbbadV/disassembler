@@ -6,15 +6,37 @@
 * Description: Test file containing required opcodes for 
 *              disassembling. 
 *-----------------------------------------------------------
-    ORG    $7000
+    ORG    $3000
 
 **Order according to "Required Opcodes" page
 
-**NOP
     NOP
+
+    NOP
+
+    MOVE.L D1,D2
+
+    MOVE.L A2,D5
+
+    MOVE.L (A3)+,D6
     
-**MOVE
-    MOVE.B D0, D1
+    MOVE.W  -(A3),(A4)+
+    
+    MOVE.L  (A2),$0012
+    
+    MOVE.L  #$00001234,$F234
+
+    MOVE.L  #$00001234,$4000
+
+    MOVE.W #$1234,D7
+
+    MOVE.W #$00CD,D7
+
+    NOP
+
+
+
+
 
 *~Font name~Courier New~
 *~Font size~10~
