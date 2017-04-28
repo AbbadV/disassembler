@@ -11,22 +11,20 @@
 **Order according to "Required Opcodes" page
 
 **NOP
-    NOP
+BEGIN    NOP
     
 **MOVE
-    mOVE.L  #$1234ABCD,$1234
-    MOVE.W  #$1234, $ABCD1234
-    move.B  #$0001, $ABCD
-    move.L -(A1),D0
-    move.W  (A2)+,(A2)
-    move.B  (A0),-(A2)
-    move.B  D3,(A4)+
-    move.W  $4000aaaa,$1234AAAA
-    MOVE.W  A1,D0
-  
+
+    BRA BEGIN
+    JSR     JUMP
+JUMP    RTS    
+         
     
     
     
+
+
+
 
 
 
