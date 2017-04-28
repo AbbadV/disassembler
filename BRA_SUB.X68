@@ -31,16 +31,18 @@ BRA_COPY
         BRA       BRA_COPY      ; do it again
         
 BRA_DONE
-        MOVE.B  #$FF,D2
-        AND.B   D1,D2
+        MOVE.B  D1,D2
+        AND.W   #$FF,D2
         CMP #0,D2
-        BNE BRA_GETLONG
+        BEQ BRA_GETWORD
 
 
         MOVE.B  D1,D6
         ADD.B   D3,D6
         MOVE.B  D6,D3
-        
+
+BRA_FINISH
+      
         MOVE.W  D3,D7
         ASR.L   #8,D7
         ASR.L   #4,D7
@@ -64,10 +66,8 @@ BRA_DONE
         JSR BRA_CONVERT       
         MOVE.B  D7,(A3)+
 
-BRA_GETLONG
-        MOVE.L #0,D2
-        
 
+        
         MOVE.B  #$A,(A3)+
         MOVE.B  #$D,(A3)+
 
@@ -78,7 +78,12 @@ BRA_GETLONG
         RTS       ; return
 
 *------------------------------------------------------------------------------
-
+BRA_GETWORD
+        MOVE.L #0,D2
+        MOVE.W  (A1)+,D2
+        ADD.W   D3,D2
+        MOVE.L  D2,D3
+        BRA BRA_FINISH
 BRA_CONVERT
     CMP.B   #10,D7
     BLT BRA_DIGIT
@@ -87,6 +92,7 @@ BRA_CONVERT
 BRA_DIGIT
     ADD.B #$30,D7
     RTS  
+
 
 
 

@@ -15,7 +15,7 @@ BEGIN    NOP
 BEGIN2  NOP    
 **MOVE
 
-    BRA BEGIN
+    BRA JUMP
     JSR     JUMP
 JUMP    RTS  
 JUMP2   RTS  
@@ -23,6 +23,7 @@ JUMP2   RTS
     
     
     
+
 
 
 
