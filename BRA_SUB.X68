@@ -31,32 +31,42 @@ BRA_COPY
         BRA       BRA_COPY      ; do it again
         
 BRA_DONE
-        MOVE.B    #$09,(A3)+
+        MOVE.B  #$FF,D2
+        AND.B   D1,D2
+        CMP #0,D2
+        BNE BRA_GETLONG
+
+
         MOVE.B  D1,D6
         ADD.B   D3,D6
         MOVE.B  D6,D3
+        
         MOVE.W  D3,D7
         ASR.L   #8,D7
         ASR.L   #4,D7
-        ADD.B   #$30,D7        
+        JSR BRA_CONVERT        
         MOVE.B  D7,(A3)+
         
         MOVE.W  D3,D7
         AND.W   #$0F00,D7
         ASR.L   #8,D7
-        ADD.B   #$30,D7        
+        JSR BRA_CONVERT       
         MOVE.B  D7,(A3)+
         
         MOVE.W  D3,D7
         AND.W   #$00F0,D7
         ASR.L   #4,D7
-        ADD.B   #$30,D7        
+        JSR BRA_CONVERT        
         MOVE.B  D7,(A3)+
         
         MOVE.W  D3,D7
         AND.W   #$000F,D7
-        ADD.B   #$30,D7        
+        JSR BRA_CONVERT       
         MOVE.B  D7,(A3)+
+
+BRA_GETLONG
+        MOVE.L #0,D2
+        
 
         MOVE.B  #$A,(A3)+
         MOVE.B  #$D,(A3)+
@@ -69,6 +79,14 @@ BRA_DONE
 
 *------------------------------------------------------------------------------
 
+BRA_CONVERT
+    CMP.B   #10,D7
+    BLT BRA_DIGIT
+    ADD.B   #$37,D7
+    RTS
+BRA_DIGIT
+    ADD.B #$30,D7
+    RTS  
 
 
 

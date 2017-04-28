@@ -18,11 +18,15 @@ MOVE_P    EQU   $C000
 
 RTS_STR DC.B    'RTS',$0A,$0D,0
 RTS_S   EQU     $4E75
-RTS_P   EQU     $4E75
+RTS_P   EQU     $FFFF
 
-BRA_STR DC.B    'BRA',0
+BRA_STR DC.B    'BRA',$09,'$',0
 BRA_S   EQU     $6000
-BRA_P   EQU     $6000
+BRA_P   EQU     $FF00
+
+JSR_STR DC.B    'JSR',$09,'$',0
+JSR_S   EQU     $4E80
+JSR_P   EQU     $FFC0
 
 *~Font name~Courier New~
 *~Font size~10~
