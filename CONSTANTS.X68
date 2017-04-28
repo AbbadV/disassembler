@@ -4,7 +4,9 @@
 * Written by James Winters
 * ------------------------------------------------------------------------------
 
-BAD_COMMAND_STR DC.B  'DATA $',0
+PRINT_NUM_STACK DS.B  8
+
+BAD_COMMAND_STR DC.B  'DATA',$09,'$',0
 
 NOP_STR DC.B  'NOP',$0A,$0D,0
 NOP_S   EQU   $4E71

@@ -83,7 +83,7 @@ DIGIT_TO_ASCII
         RTS
 
 NAN
-        ADDI.B  #$41,D2
+        ADDI.B  #$37,D2
 
         RTS
         
