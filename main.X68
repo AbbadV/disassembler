@@ -34,6 +34,9 @@ START:          ORG    $1000                first instruction of program
     MOVE.W      #$AAAA,$13020
     MOVE.W      #$DAFC,$13022   ; adda.w  #$40,A5
     MOVE.W      #$0040,$13024
+    MOVE.W      #$4EB8,$13026   ; JSR     $1234
+    MOVE.W      #$1234,$13028
+    MOVE.W      #$4E75,$1302A   ; RTS
 *---------------------------------------
 
 *Display welcome 

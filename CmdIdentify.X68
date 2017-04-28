@@ -54,6 +54,24 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
+        * check RTS
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #RTS_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #RTS_S,D4  
+        MOVE.W    #RTS_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check JSR
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #JSR_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #JSR_S,D4  
+        MOVE.W    #JSR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
         * check MOVEM
         MOVE.W    D1,D2         ; move the value into D2 for temp storage
         MOVE.W    #MOVEM_P,D3    ; move values into registers for CMD_CHECK
@@ -62,6 +80,16 @@ CMD_IDENTIFY
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check BRA
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #BRA_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #BRA_S,D4  
+        MOVE.W    #BRA_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
 
         * check MOVEQ
         MOVE.W    D1,D2         ; move the value into D2 for temp storage
@@ -129,7 +157,10 @@ NEGATIVE
         INCLUDE 'MOVEA_SUB.X68'
         INCLUDE 'MOVE_SUB.X68'
         INCLUDE 'NOP_SUB.X68'
+        INCLUDE 'RTS_SUB.X68'
+        INCLUDE 'JSR_SUB.X68'
         INCLUDE 'MOVEM_SUB.X68'
+        INCLUDE 'BRA_SUB.X68'
         INCLUDE 'MOVEQ_SUB.X68'
         INCLUDE 'ADD_SUB.X68'
         INCLUDE 'ADDA_SUB.X68'

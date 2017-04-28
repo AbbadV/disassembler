@@ -20,9 +20,21 @@ MOVE_STR   DC.B  'MOVE',0
 MOVE_S     EQU   $0000
 MOVE_P     EQU   $C000
 
+RTS_STR    DC.B  'RTS',0
+RTS_S      EQU   $4E75
+RTS_P      EQU   $FFFF
+
+JSR_STR    DC.B  'JSR',0
+JSR_S      EQU   $4E80
+JSR_P      EQU   $FFC0
+
 MOVEM_STR  DC.B  'MOVEM',0
 MOVEM_S    EQU   $4880
 MOVEM_P    EQU   $FB80
+
+BRA_STR    DC.B  'BRA',0
+BRA_S      EQU   $6000
+BRA_P      EQU   $FF00
 
 MOVEQ_STR  DC.B  'MOVEQ',0
 MOVEQ_S    EQU   $7000
