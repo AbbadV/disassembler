@@ -15,16 +15,9 @@ START:          ORG    $1000                first instruction of program
 *---------------------------------------
 *   THIS IS FOR TESTING, IGNORE THIS
 *---------------------------------------
-    MOVE.W      #$1200,$13000
-    MOVE.W      #$2A14,$13002
-    MOVE.W      #$4E71,$13004
-    MOVE.W      #$4E71,$13006
-    MOVE.W      #$3E3C,$13008
-    MOVE.W      #$0040,$1300A
-    MOVE.W      #$21FC,$1300C
-    MOVE.W      #$0000,$1300E
-    MOVE.W      #$5000,$13010
-    MOVE.W      #$1120,$13012
+    MOVE.W      #$2021,$13000   ; move.l  -(A1),D0
+    MOVE.W      #$349A,$13002   ; move.w  (A2)+,(A2)
+    MOVE.W      #$1510,$13004   ; move.b  (A0),-(A2)
 *---------------------------------------
 
 *Display welcome 

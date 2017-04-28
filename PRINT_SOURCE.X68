@@ -37,15 +37,15 @@ PRINT_SOURCE_REGISTER
           ADDI.B    #$30,D3     ; add to convert to ASCII
 
           CMP.B     #0,D2
-          BRA       PRINT_SOURCE_REGISTER_DN
+          BEQ       PRINT_SOURCE_REGISTER_DN
           CMP.B     #1,D2
-          BRA       PRINT_SOURCE_REGISTER_AN
+          BEQ       PRINT_SOURCE_REGISTER_AN
           CMP.B     #2,D2
-          BRA       PRINT_SOURCE_REGISTER_ANPAREN
+          BEQ       PRINT_SOURCE_REGISTER_ANPAREN
           CMP.B     #3,D2
-          BRA       PRINT_SOURCE_REGISTER_ANPLUS
+          BEQ       PRINT_SOURCE_REGISTER_ANPLUS
           CMP.B     #4,D2
-          BRA       PRINT_SOURCE_REGISTER_ANMINUS
+          BEQ       PRINT_SOURCE_REGISTER_ANMINUS
 
           RTS       ; quit if nothing is found
 
