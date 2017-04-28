@@ -6,8 +6,8 @@
                       MOVEA
                       MOVEQ
                       MOVEM
-ADD
-ADDA
+                      ADD
+                      ADDA
 ADDI
 ADDQ
 SUB
@@ -24,6 +24,6 @@ ASL
 ROL
 ROR
 Bcc (BCC, BLT, BGE)
-JSR
+                      JSR
                       RTS
                       BRA

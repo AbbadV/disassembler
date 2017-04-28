@@ -26,6 +26,14 @@ START:          ORG    $1000                first instruction of program
     MOVE.W      #$FF10,$13010
     MOVE.W      #$4C9F,$13012   ; movem.w (SP)+,D0-D7/A3
     MOVE.W      #$08FF,$13014
+    MOVE.W      #$D842,$13016   ; add.w   D2,D4
+    MOVE.W      #$D578,$13018   ; add.w   D2,$789A
+    MOVE.W      #$789A,$1301A
+    MOVE.W      #$DCB9,$1301C   ; add.l   $AAAA,D6
+    MOVE.W      #$0000,$1301E
+    MOVE.W      #$AAAA,$13020
+    MOVE.W      #$DAFC,$13022   ; adda.w  #$40,A5
+    MOVE.W      #$0040,$13024
 *---------------------------------------
 
 *Display welcome 
