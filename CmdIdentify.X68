@@ -19,10 +19,16 @@ CMD_IDENTIFY
   
         MOVEA.L   #0,A1
         MOVEA.L   IN_CURR_A,A1  ; A1 is a pointer to the current position
+        MOVEA.L   OUT_CURR_A,A3 ; A3 is a pointer to the current output pos
+        MOVE.L    A1,D1
+
+        JSR       PRINT_NUM     ; print the address to the screen
+        MOVE.B    #9,(A3)+      ; print tab character
+        MOVE.L    A3,OUT_CURR_A
         MOVE.W    (A1),D1       ; D1 is the current opcode
 
         * check MOVE
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    D1,D2         ; move the value into D2 for temp storage
         MOVE.W    #MOVE_P,D3    ; move values into registers for CMD_CHECK
         MOVE.W    #MOVE_S,D4  
         MOVE.W    #MOVE_SUB,D5
@@ -68,6 +74,11 @@ NEGATIVE
         RTS
 
 * ------------------------------------------------------------------------------
+
+        INCLUDE 'PRINT_SIZE.X68'
+        INCLUDE 'PRINT_SOURCE.X68'
+        INCLUDE 'PRINT_DEST.X68'
+        INCLUDE 'PRINT_NUM.X68'
 
         INCLUDE 'BAD_COMMAND.X68'
         INCLUDE 'MOVE_SUB.X68'

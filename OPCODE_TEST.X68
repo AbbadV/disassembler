@@ -10,33 +10,23 @@
 
 **Order according to "Required Opcodes" page
 
-
-    MOVE.L  #$00001234,$4000
-
-    MOVE.L D1,D2
-
-    MOVE.L A2,D5
-
-    MOVE.L (A3)+,D6
-    
-    MOVE.W  -(A3),(A4)+
-    
-    MOVE.L  (A2),$0012
-    
-    MOVE.L  #$00001234,$F234
-
-    NOP
-
-    MOVE.W #$1234,D7
-
-    MOVE.W #$00CD,$12345678
-
+**NOP
     NOP
     
-    NOP
-
-
-
+**MOVE
+    mOVE.L  #$1234ABCD,$1234
+    MOVE.W  #$1234, $ABCD1234
+    move.B  #$0001, $ABCD
+    move.L -(A1),D0
+    move.W  (A2)+,(A2)
+    move.B  (A0),-(A2)
+    move.B  D3,(A4)+
+    move.W  $4000aaaa,$1234AAAA
+    MOVE.W  A1,D0
+  
+    
+    
+    
 
 
 
