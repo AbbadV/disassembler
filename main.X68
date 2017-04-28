@@ -18,6 +18,14 @@ START:          ORG    $1000                first instruction of program
     MOVE.W      #$2021,$13000   ; move.l  -(A1),D0
     MOVE.W      #$349A,$13002   ; move.w  (A2)+,(A2)
     MOVE.W      #$1510,$13004   ; move.b  (A0),-(A2)
+    MOVE.W      #$2A7C,$13006   ; movea.l #$4166,A5
+    MOVE.W      #$0000,$13008
+    MOVE.W      #$4166,$1300A
+    MOVE.W      #$7A4A,$1300C   ; moveq.l #$4A,D5
+    MOVE.W      #$48E7,$1300E   ; movem.l D0-D7/A3,-(SP)
+    MOVE.W      #$FF10,$13010
+    MOVE.W      #$4C9F,$13012   ; movem.w (SP)+,D0-D7/A3
+    MOVE.W      #$08FF,$13014
 *---------------------------------------
 
 *Display welcome 
