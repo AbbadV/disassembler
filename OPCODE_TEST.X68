@@ -10,9 +10,8 @@
 
 **Order according to "Required Opcodes" page
 
-    NOP
 
-    NOP
+    MOVE.L  #$00001234,$4000
 
     MOVE.L D1,D2
 
@@ -26,13 +25,20 @@
     
     MOVE.L  #$00001234,$F234
 
-    MOVE.L  #$00001234,$4000
+    NOP
 
     MOVE.W #$1234,D7
 
-    MOVE.W #$00CD,D7
+    MOVE.W #$00CD,$12345678
 
     NOP
+    
+    NOP
+
+
+
+
+
 
 
 
