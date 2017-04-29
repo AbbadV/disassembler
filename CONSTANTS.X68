@@ -28,6 +28,17 @@ JSR_STR DC.B    'JSR',$09,'$',0
 JSR_S   EQU     $4E80
 JSR_P   EQU     $FFC0
 
+BCC_STR DC.B    'BCC',$09,'$',0
+BCC_S   EQU     $6400
+BCC_P   EQU     $FF00
+
+BGE_STR DC.B    'BGE',$09,'$',0
+BGE_S   EQU     $6C00
+BGE_P   EQU     $FF00
+
+BLT_STR DC.B    'BLT',$09,'$',0
+BLT_S   EQU     $6D00
+BLT_P   EQU     $FF00
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

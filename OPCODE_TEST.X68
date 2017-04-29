@@ -12,17 +12,20 @@
 
 **NOP
 BEGIN    NOP
-BEGIN2  NOP    
+   
 **MOVE
 
-    BRA JUMP
+    Bcc begin
+    BGE JUMP
+    BLT BEGIN
     JSR     JUMP
 JUMP    RTS  
-JUMP2   RTS  
+ 
          
     
     
     
+
 
 
 
