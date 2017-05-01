@@ -14,7 +14,8 @@
 BEGIN    NOP
    
 **MOVE
-
+    ROL.L   D0,D1
+    ROL.B   #3,D1
     Bcc begin
     BGE JUMP
     BLT BEGIN
@@ -25,6 +26,8 @@ JUMP    RTS
     
     
     
+
+
 
 
 

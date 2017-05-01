@@ -39,6 +39,15 @@ BGE_P   EQU     $FF00
 BLT_STR DC.B    'BLT',$09,'$',0
 BLT_S   EQU     $6D00
 BLT_P   EQU     $FF00
+
+ROL_STR DC.B    'ROL',0
+ROL_S   EQU     $E118
+ROL_P   EQU     $F118
+
+ROR_STR DC.B    'ROR',0
+ROR_S   EQU     $E018
+ROR_P   EQU     $F118
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~
