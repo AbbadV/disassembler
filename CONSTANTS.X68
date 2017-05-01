@@ -56,6 +56,13 @@ ASR_STR DC.B    'ASR',0
 ASR_S   EQU     $E000
 ASR_P   EQU     $E118
 
+LSL_STR DC.B    'LSL',0
+LSL_S   EQU     $E108
+LSL_P   EQU     $E118
+
+LSR_STR DC.B    'LSR',0
+LSR_S   EQU     $E008
+LSR_P   EQU     $E118
 
 
 *~Font name~Courier New~
