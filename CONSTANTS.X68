@@ -48,6 +48,16 @@ ROR_STR DC.B    'ROR',0
 ROR_S   EQU     $E018
 ROR_P   EQU     $F118
 
+ASL_STR DC.B    'ASL',0
+ASL_S   EQU     $E100
+ASL_P   EQU     $E118
+
+ASR_STR DC.B    'ASR',0
+ASR_S   EQU     $E000
+ASR_P   EQU     $E118
+
+
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

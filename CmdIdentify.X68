@@ -99,6 +99,25 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal        
 
+        * check ASR
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ASR_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ASR_S,D4  
+        MOVE.W    #ASR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check ASL
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ASL_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ASL_S,D4  
+        MOVE.W    #ASL_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+
         * check ROR
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
         MOVE.W    #ROR_P,D3    ; move values into registers for CMD_CHECK
@@ -163,6 +182,8 @@ NEGATIVE
         INCLUDE 'BGE_SUB.X68'
         INCLUDE 'ROL_SUB.X68'
         INCLUDE 'ROR_SUB.X68'
+        INCLUDE 'ASL_SUB.X68'
+        INCLUDE 'ASR_SUB.X68'
         
 
 * BAD_COMMAND_STR DC.B  'DATA $',0
@@ -172,6 +193,7 @@ NEGATIVE
 * NOP_P   EQU   $FFFF
 
 * ------------------------------------------------------------------------------
+
 
 
 
