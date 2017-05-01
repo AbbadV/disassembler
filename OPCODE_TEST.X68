@@ -28,6 +28,10 @@ BEGIN    NOP
         LSL.L   D0,D1
     LSL.B   #3,D1
     LSR.W   D0,D1
+    LSR (A1)
+    ASR -(A3)
+    ROR $4000
+    
     Bcc begin
     BGE JUMP
     BLT BEGIN
@@ -38,6 +42,7 @@ JUMP    RTS
     
     
     
+
 
 
 

@@ -37,15 +37,15 @@ PRINT_DEST_REGISTER
           ADDI.W    #$30,D3     ; add to convert to ASCII
 
           CMP.B     #0,D2
-          BRA       PRINT_DEST_REGISTER_DN
+          BEQ       PRINT_DEST_REGISTER_DN
           CMP.B     #1,D2
-          BRA       PRINT_DEST_REGISTER_AN
+          BEQ       PRINT_DEST_REGISTER_AN
           CMP.B     #2,D2
-          BRA       PRINT_DEST_REGISTER_ANPAREN
+          BEQ       PRINT_DEST_REGISTER_ANPAREN
           CMP.B     #3,D2
-          BRA       PRINT_DEST_REGISTER_ANPLUS
+          BEQ       PRINT_DEST_REGISTER_ANPLUS
           CMP.B     #4,D2
-          BRA       PRINT_DEST_REGISTER_ANMINUS
+          BEQ       PRINT_DEST_REGISTER_ANMINUS
 
           RTS       ; quit if nothing is found
 
@@ -86,7 +86,7 @@ PRINT_DEST_REGISTER_ANMINUS
 
 PRINT_DEST_MEMORY
 
-          MOVE.B    D1,D3       ; copy type into D3
+          MOVE.W    D1,D3       ; copy type into D3
           ANDI.W    #$E00,D3    ; isolate the 3 bits that matter
           LSR.W     #8,D3
           LSR.W     #1,D3

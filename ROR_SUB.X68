@@ -32,7 +32,10 @@ ROR_DONE
           MOVE.W    D1, D0
           ANDI.W    #$00C0,D0
           LSR.W     #6,D0
-
+          
+          *mem shift, get EA
+          CMP.B     #3,D0
+          BEQ       ROR_EA
 
           * we always print the period (2E in ASCII)
           MOVE.B    #$2E,(A3)+
@@ -72,11 +75,11 @@ ROR_DEST          *GET DATA REGISTER
           ANDI.W    #$0007,D1
           ADD.B #$30,D1
           MOVE.B    D1,(A3)+
+          
+ROR_FIN          
           MOVE.B    #$0A,(A3)+
           MOVE.B    #$0D,(A3)+
  
-          
-
         MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer
         MOVE.L    A3,OUT_CURR_A ; move the current A3 back to the output pointer
 
@@ -103,6 +106,15 @@ ROR_IMM
     ADD.B #$30,D7
     MOVE.B D7,(A3)+
     BRA ROR_DEST
+ROR_EA
+    MOVE.B    #$2E,(A3)+
+    MOVE.B    #$57,(A3)+
+    MOVE.B #$09,(A3)+
+    JSR PRINT_SOURCE_SUB
+    BRA ROR_FIN
+
+
+
 
 
 *~Font name~Courier New~
