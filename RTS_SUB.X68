@@ -40,6 +40,9 @@ RTS_DONE
         * ----------------------------------------------------
         * ----------------------------------------------------
 
+        MOVE.B    #$0A,(A3)+
+        MOVE.B    #$0D,(A3)+
+
         MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer
         MOVE.L    A3,OUT_CURR_A ; move the current A3 back to the output pointer
 

@@ -90,6 +90,32 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
+        * check BCC
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #BCC_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #BCC_S,D4  
+        MOVE.W    #BCC_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check BGE
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #BGE_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #BGE_S,D4  
+        MOVE.W    #BGE_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check BLT
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #BLT_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #BLT_S,D4  
+        MOVE.W    #BLT_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
         * check MOVEQ
         MOVE.W    D1,D2         ; move the value into D2 for temp storage
@@ -117,6 +143,61 @@ CMD_IDENTIFY
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check ASL
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ASL_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ASL_S,D4  
+        MOVE.W    #ASL_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check ASR
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ASR_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ASR_S,D4  
+        MOVE.W    #ASR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check LSL
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #LSL_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #LSL_S,D4  
+        MOVE.W    #LSL_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check LSR
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #LSR_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #LSR_S,D4  
+        MOVE.W    #LSR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check ROL
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ROL_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ROL_S,D4  
+        MOVE.W    #ROL_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check ROR
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ROR_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ROR_S,D4  
+        MOVE.W    #ROR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
 
         * if we hit here it's not a valid command
         JSR       BAD_COMMAND_SUB
@@ -161,9 +242,18 @@ NEGATIVE
         INCLUDE 'JSR_SUB.X68'
         INCLUDE 'MOVEM_SUB.X68'
         INCLUDE 'BRA_SUB.X68'
+        INCLUDE 'BCC_SUB.X68'
+        INCLUDE 'BGE_SUB.X68'
+        INCLUDE 'BLT_SUB.X68'
         INCLUDE 'MOVEQ_SUB.X68'
         INCLUDE 'ADD_SUB.X68'
         INCLUDE 'ADDA_SUB.X68'
+        INCLUDE 'ASL_SUB.X68'
+        INCLUDE 'ASR_SUB.X68'
+        INCLUDE 'LSL_SUB.X68'
+        INCLUDE 'LSR_SUB.X68'
+        INCLUDE 'ROL_SUB.X68'
+        INCLUDE 'ROR_SUB.X68'
 
 * BAD_COMMAND_STR DC.B  'DATA $',0
 

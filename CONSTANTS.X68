@@ -47,3 +47,53 @@ ADD_P      EQU   $F000
 ADDA_STR   DC.B  'ADDA',0
 ADDA_S     EQU   $D0C0
 ADDA_P     EQU   $F0C0
+
+BCC_STR DC.B    'BCC',$09,'$',0
+BCC_S   EQU     $6400
+BCC_P   EQU     $FF00
+
+BGE_STR DC.B    'BGE',$09,'$',0
+BGE_S   EQU     $6C00
+BGE_P   EQU     $FF00
+
+BLT_STR DC.B    'BLT',$09,'$',0
+BLT_S   EQU     $6D00
+BLT_P   EQU     $FF00
+
+*BIT OPERATOR CONSTANTS
+
+ROL_STR DC.B    'ROL',0
+ROL_S   EQU     $E118
+ROL_P   EQU     $F118
+ROLM_S   EQU     $E7C0
+ROLM_P   EQU     $FFC0
+
+ROR_STR DC.B    'ROR',0
+ROR_S   EQU     $E018
+ROR_P   EQU     $F118
+RORM_S   EQU     $E6C0
+RORM_P   EQU     $FFC0
+
+ASL_STR DC.B    'ASL',0
+ASL_S   EQU     $E100
+ASL_P   EQU     $E118
+ASLM_S   EQU     $E1C0
+ASLM_P   EQU     $FFC0
+
+ASR_STR DC.B    'ASR',0
+ASR_S   EQU     $E000
+ASR_P   EQU     $E118
+ASRM_S   EQU     $E0C0
+ASRM_P   EQU     $FFC0
+
+LSL_STR DC.B    'LSL',0
+LSL_S   EQU     $E108
+LSL_P   EQU     $E118
+LSLM_S   EQU     $E3C0
+LSLM_P   EQU     $FFC0
+
+LSR_STR DC.B    'LSR',0
+LSR_S   EQU     $E008
+LSR_P   EQU     $E118
+LSRM_S   EQU     $E2C0
+LSRM_P   EQU     $FFC0

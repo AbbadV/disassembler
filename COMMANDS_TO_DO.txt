@@ -17,13 +17,13 @@ DIVU
 LEA
 AND
 OR
-LSL
-LSR
-ASR
-ASL
-ROL
-ROR
-Bcc (BCC, BLT, BGE)
+                      LSL
+                      LSR
+                      ASR
+                      ASL
+                      ROL
+                      ROR
+                      Bcc (BCC, BLT, BGE)
                       JSR
                       RTS
-BRA
+                      BRA
