@@ -6,7 +6,7 @@
 * Description: Test file containing required opcodes for 
 *              disassembling. 
 *-----------------------------------------------------------
-    ORG    $3000
+    ORG    $13000
 
 **Order according to "Required Opcodes" page
 
@@ -14,24 +14,8 @@
 BEGIN    NOP
    
 **MOVE
-    ASL.L   D0,D1
-    ASL.B   #3,D1
-    ASR.L   D0,D1
-    ASR.B   #3,D1
-    ASL.W   D0,D1
-    ASR.W   #3,D1
-    ROR.W   #3,D3
-    ROL.B   #3,D5
-        LSR.L   D0,D1
-    LSR.B   #3,D1
-    LSL.W   D0,D1
-        LSL.L   D0,D1
-    LSL.B   #3,D1
-    LSR.W   D0,D1
-    LSR (A1)
-    ASR -(A3)
-    ROR $4000
-    
+    bcc jump
+    blt jump
     Bcc begin
     BGE JUMP
     BLT BEGIN
@@ -42,6 +26,9 @@ JUMP    RTS
     
     
     
+
+
+
 
 
 
