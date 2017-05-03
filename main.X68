@@ -44,7 +44,7 @@ START:          ORG    $1000                first instruction of program
     MOVE.W      #$001E,$13034
     MOVE.W      #$6400,$13036   ; BCC     $13056
     MOVE.W      #$001E,$13038
-    MOVE.W      #$6E00,$1303A   ; BGT     $1305A
+    MOVE.W      #$6C00,$1303A   ; BGE     $1305A
     MOVE.W      #$001E,$1303C
     MOVE.W      #$6D00,$1303E   ; BLT     $1305E
     MOVE.W      #$001E,$13040
