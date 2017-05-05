@@ -48,6 +48,14 @@ ADDA_STR   DC.B  'ADDA',0
 ADDA_S     EQU   $D0C0
 ADDA_P     EQU   $F0C0
 
+ADDI_STR   DC.B  'ADDI',0
+ADDI_S     EQU   $0600
+ADDI_P     EQU   $FF00
+
+ADDQ_STR   DC.B  'ADDQ',0
+ADDQ_S     EQU   $5000
+ADDQ_P     EQU   $F100
+
 BCC_STR DC.B    'BCC',$09,'$',0
 BCC_S   EQU     $6400
 BCC_P   EQU     $FF00

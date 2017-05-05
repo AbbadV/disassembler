@@ -49,6 +49,10 @@ START:          ORG    $1000                first instruction of program
     MOVE.W      #$6D00,$1303E   ; BLT     $1305E
     MOVE.W      #$001E,$13040
     MOVE.W      #$64FA,$13042   ; BCC     $13040
+    MOVE.W      #$0644,$13044
+    MOVE.W      #$0123,$13046   ; ADDI.W  #$123,D4
+    MOVE.W      #$5C44,$13048   ; ADDQ.W  #$6,D4
+    MOVE.W      #$5043,$1304A   ; ADDQ.W  #$8,D3
 *---------------------------------------
 
 *Display welcome 
