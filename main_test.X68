@@ -22,15 +22,15 @@ START:                  ; first instruction of program
    
     MOVE.B      #1,IS_VALID ; at the beginning assume the code is valid
 
-    MOVE.L      #$13000,IN_START_A
+    MOVE.L      #$7000,IN_START_A
     MOVE.L      IN_START_A,IN_CURR_A
-    MOVE.L      #$13004,IN_END_A
+    MOVE.L      #$7076,IN_END_A
 
     MOVE.L      #$4000,OUT_START_A
     MOVE.L      OUT_START_A,OUT_CURR_A
     
-    MOVE.W      #$6400,$13000
-    MOVE.W      #$001E,$13002
+
+
 
 
 LOOP
@@ -95,6 +95,11 @@ IS_VALID             ds.b    1        ; stores whether or not the code is valid
 
 
         
+
+
+
+
+
 
 
 

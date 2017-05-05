@@ -39,7 +39,8 @@ BRA_DONE
 
         MOVE.B  D1,D6
         ADD.B   D3,D6
-        MOVE.B  D6,D1
+        MOVE.B D6,D3
+        MOVE.L D3,D1
 
 BRA_FINISH
         MOVE.L    A3,OUT_CURR_A ; move the current A3 back to the output pointer
@@ -65,6 +66,7 @@ BRA_GETWORD
         ADD.L   D3,D2
         MOVE.L  D2,D1
         BRA BRA_FINISH
+
 
 
 
