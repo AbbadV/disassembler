@@ -136,12 +136,38 @@ MAIN_LOOP
 END_MAIN_LOOP
 
     * add a 00 to the very end of the output
-    MOVEA.L   OUT_CURR_A,A1
-    MOVE.B    #0,(A1)+
+    MOVEA.L     OUT_CURR_A,A1
+    MOVE.B      #0,(A1)+
 
-    MOVEA.L   OUT_START_A,A1
-    MOVE.B    #13,D0
-    TRAP      #15
+    * --------------
+    * printing loop
+    * --------------
+    MOVEA.L     OUT_START_A,A1
+
+FINAL_PRINT_LOOP
+    MOVE.B      (A1)+,D1    ; print a single character
+    MOVE.B      #6,D0
+    TRAP        #15
+  
+    TST         D1
+    BEQ         FINAL_PRINT_LOOP_END
+
+    CMP.B       #$D,D1    ; if it's a LF, we hit a newline, wait for enter
+    BNE         FINAL_PRINT_LOOP
+
+FINAL_PRINT_LOOP_WAIT
+    MOVE.B      #5,D0     ; get a single character
+    TRAP        #15
+    CMP.B       #$D,D1    ; and compare it with $D (carridge return or ENTER)
+    BNE         FINAL_PRINT_LOOP_WAIT ; if it's not that, wait again
+
+    BRA         FINAL_PRINT_LOOP
+
+FINAL_PRINT_LOOP_END
+
+
+    * MOVE.B    #13,D0
+    * TRAP      #15
 
     SIMHALT             ; halt simulator
 

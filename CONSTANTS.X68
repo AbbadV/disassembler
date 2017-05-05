@@ -70,7 +70,7 @@ AND_P      EQU   $F000
 
 OR_STR     DC.B  'OR',0
 OR_S       EQU   $8000
-AORP       EQU   $F000
+OR_P       EQU   $F000
 
 BCC_STR DC.B    'BCC',$09,'$',0
 BCC_S   EQU     $6400
