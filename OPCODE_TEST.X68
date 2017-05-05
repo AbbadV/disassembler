@@ -6,7 +6,7 @@
 * Description: Test file containing required opcodes for 
 *              disassembling. 
 *-----------------------------------------------------------
-    ORG    $13000
+    ORG    $3000
 
 **Order according to "Required Opcodes" page
 
@@ -26,6 +26,7 @@ JUMP    RTS
     
     
     
+
 
 
 
