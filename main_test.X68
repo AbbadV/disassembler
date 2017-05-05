@@ -24,7 +24,7 @@ START:                  ; first instruction of program
 
     MOVE.L      #$7000,IN_START_A
     MOVE.L      IN_START_A,IN_CURR_A
-    MOVE.L      #$7064,IN_END_A
+    MOVE.L      #$7002,IN_END_A
 
     MOVE.L      #$4000,OUT_START_A
     MOVE.L      OUT_START_A,OUT_CURR_A
@@ -95,6 +95,7 @@ IS_VALID             ds.b    1        ; stores whether or not the code is valid
 
 
         
+
 
 
 
