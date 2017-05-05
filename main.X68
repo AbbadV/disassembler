@@ -116,10 +116,9 @@ CONTINUE_END2   JSR     EVEN_CHECK          verify  input adress is even
                 MOVE.L  A2,IN_CURR_A        copy current input to IN_CURR_A
                 MOVE.L  A3,IN_END_A         copy end input to IN_END_A
 
-                * start building the string right after the input
-                * to avoid conflicts
-                MOVE.L  IN_END_A,OUT_START_A
-                ADDI.L  #2,OUT_START_A
+                * start building the string a bit after the source code ends
+                * (about $3000 to avoid conflicts)
+                MOVE.L  #$3000,OUT_START_A
                 MOVE.L  OUT_START_A,OUT_CURR_A
 
                 * it starts valid, so make IS_VALID 1
