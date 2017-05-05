@@ -56,6 +56,14 @@ ADDQ_STR   DC.B  'ADDQ',0
 ADDQ_S     EQU   $5000
 ADDQ_P     EQU   $F100
 
+SUB_STR    DC.B  'SUB',0
+SUB_S      EQU   $9000
+SUB_P      EQU   $F000
+
+SUBI_STR   DC.B  'SUBI',0
+SUBI_S     EQU   $0400
+SUBI_P     EQU   $FF00
+
 BCC_STR DC.B    'BCC',$09,'$',0
 BCC_S   EQU     $6400
 BCC_P   EQU     $FF00

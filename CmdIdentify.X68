@@ -26,6 +26,15 @@ CMD_IDENTIFY
         MOVE.B    #9,(A3)+      ; print tab character
         MOVE.L    A3,OUT_CURR_A
         MOVE.W    (A1),D1       ; D1 is the current opcode
+        
+        * check SUBI
+        MOVE.W    D1,D2         ; move the value into D2 for temp storage
+        MOVE.W    #SUBI_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #SUBI_S,D4  
+        MOVE.W    #SUBI_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
         * check ADDI
         MOVE.W    D1,D2         ; move the value into D2 for temp storage
@@ -136,7 +145,7 @@ CMD_IDENTIFY
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
         * check MOVEQ
-        MOVE.W    D1,D2         ; move the value into D2 for temp storage
+        MOVE.W    D1,D2          ; move the value into D2 for temp storage
         MOVE.W    #MOVEQ_P,D3    ; move values into registers for CMD_CHECK
         MOVE.W    #MOVEQ_S,D4  
         MOVE.W    #MOVEQ_SUB,D5
@@ -144,8 +153,17 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
+        * check SUB
+        MOVE.W    D1,D2         ; move the value into D2 for temp storage
+        MOVE.W    #SUB_P,D3     ; move values into registers for CMD_CHECK
+        MOVE.W    #SUB_S,D4  
+        MOVE.W    #SUB_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
         * check ADDA
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    D1,D2         ; move the value into D2 for temp storage
         MOVE.W    #ADDA_P,D3    ; move values into registers for CMD_CHECK
         MOVE.W    #ADDA_S,D4  
         MOVE.W    #ADDA_SUB,D5
@@ -307,6 +325,7 @@ NEGATIVE
         INCLUDE 'PRINT_NUM.X68'
 
         INCLUDE 'BAD_COMMAND.X68'
+        INCLUDE 'SUBI_SUB.X68'
         INCLUDE 'ADDI_SUB.X68'
         INCLUDE 'MOVEA_SUB.X68'
         INCLUDE 'MOVE_SUB.X68'
@@ -320,6 +339,7 @@ NEGATIVE
         INCLUDE 'BGE_SUB.X68'
         INCLUDE 'BLT_SUB.X68'
         INCLUDE 'MOVEQ_SUB.X68'
+        INCLUDE 'SUB_SUB.X68'
         INCLUDE 'ADD_SUB.X68'
         INCLUDE 'ADDA_SUB.X68'
         INCLUDE 'ASL_SUB.X68'
