@@ -40,6 +40,14 @@ MOVEQ_STR  DC.B  'MOVEQ',0
 MOVEQ_S    EQU   $7000
 MOVEQ_P    EQU   $F100
 
+DIVU_STR    DC.B    'DIVU.W ',0
+DIVU_S  EQU $80C0
+DIVU_P EQU $F1C0
+
+MULS_STR    DC.B    'MULS.W ',0
+MULS_S      EQU     $C1C0
+MULS_P      EQU     $F1C0
+
 ADD_STR    DC.B  'ADD',0
 ADD_S      EQU   $D000
 ADD_P      EQU   $F000
@@ -47,6 +55,23 @@ ADD_P      EQU   $F000
 ADDA_STR   DC.B  'ADDA',0
 ADDA_S     EQU   $D0C0
 ADDA_P     EQU   $F0C0
+
+ADDI_STR   DC.B  'ADDI',0
+ADDI_S     EQU   $0600
+ADDI_P     EQU   $FF00
+
+ADDQ_STR   DC.B  'ADDQ',0
+ADDQ_S     EQU   $5000
+ADDQ_P     EQU   $F100
+
+SUB_STR    DC.B  'SUB',0
+SUB_S      EQU   $9000
+SUB_P      EQU   $F000
+
+SUBI_STR   DC.B  'SUBI',0
+SUBI_S     EQU   $0400
+SUBI_P     EQU   $FF00
+
 
 BCC_STR DC.B    'BCC',$09,'$',0
 BCC_S   EQU     $6400
@@ -97,6 +122,19 @@ LSR_S   EQU     $E008
 LSR_P   EQU     $E118
 LSRM_S   EQU     $E2C0
 LSRM_P   EQU     $FFC0
+
+AND_STR    DC.B  'AND',0
+AND_S      EQU   $C000
+AND_P      EQU   $F000
+
+OR_STR     DC.B  'OR',0
+OR_S       EQU   $8000
+OR_P       EQU   $F000
+
+
+
+
+
 
 
 

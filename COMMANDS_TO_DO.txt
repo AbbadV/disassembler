@@ -8,15 +8,15 @@
                       MOVEM
                       ADD
                       ADDA
-ADDI
-ADDQ
-SUB
-SUBI
-MULS
-DIVU
+					  ADDI
+					  ADDQ
+					  SUB
+					  SUBI
+					  MULS
+					  DIVU
 LEA
-AND
-OR
+					  AND
+					  OR
                       LSL
                       LSR
                       ASR

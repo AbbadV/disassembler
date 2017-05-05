@@ -13,8 +13,8 @@
 **NOP
 BEGIN    NOP
     MOVE.B D0, D1
-    MOVE.W #$ABCD, $1234ABCD ;doesn't increment output pointer correctly
-    MOVE.L #$1234ABCD, $AAAA  ;doesn't increment output pointer correctly
+    MOVE.W #$ABCD, $1234ABCD 
+    MOVE.L #$1234ABCD, $AAAA 
     MOVE.B -(A1),(A2)
     MOVE.B (A3)+,-(A4) 
     MOVE.B (A3)+,(A4)+
@@ -31,7 +31,14 @@ BEGIN    NOP
     MOVEM.W D1-D3/A1-A3/A7,-(SP)
     MOVEM.L (SP)+,D1-D3/A1-A3/A7
     MOVEQ #128,D3
-    
+    MULS   #$F,D4
+    DIVU    #$2,D0
+    OR  #$AAA1,D2
+    AND #$1234,D4
+    ADDI    #1,D3
+    ADDQ    #5,D5
+    SUB A2,D4
+    SUBI    #$12,D5
     ASL.L   D0,D1
     ASL.B   #3,D1
     ASR.L   D0,D1
@@ -40,30 +47,31 @@ BEGIN    NOP
     ASR.W   #3,D1
     ROR.W   #3,D3
     ROL.B   #3,D5
-    LSR.L   D0,D1
+        LSR.L   D0,D1
     LSR.B   #3,D1
     LSL.W   D0,D1
-    LSL.L   D0,D1
+        LSL.L   D0,D1
     LSL.B   #3,D1
     LSR.W   D0,D1
     LSR (A1)
     ASR -(A3)
     ROR $4000
-   
-**MOVE
-
-    Bcc begin
-    BGE JUMP
-    BLT JUMP
-    BRA BEGIN
-
-    JSR     JUMP
-JUMP    RTS  
+    
+    
+    MOVE.B D0, D1
+    MOVE.W #$ABCD, $1234ABCD ;doesn't increment output pointer correctly   
  
          
     
     
     
+
+
+
+
+
+
+
 
 
 
