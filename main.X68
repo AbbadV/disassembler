@@ -12,20 +12,6 @@ LF              EQU     $0A                 ASCII code  for line feed
 
 START:          ORG    $1000                first instruction of program
 
-*---------------------------------------
-*   THIS IS FOR TESTING, IGNORE THIS
-*---------------------------------------
-    MOVE.W      #$1200,$13000
-    MOVE.W      #$2A14,$13002
-    MOVE.W      #$4E71,$13004
-    MOVE.W      #$4E71,$13006
-    MOVE.W      #$3E3C,$13008
-    MOVE.W      #$0040,$1300A
-    MOVE.W      #$21FC,$1300C
-    MOVE.W      #$0000,$1300E
-    MOVE.W      #$5000,$13010
-    MOVE.W      #$1120,$13012
-*---------------------------------------
 
 *Display welcome 
                 LEA     welcome_msg,A1      load welcome message to A1
@@ -83,10 +69,9 @@ CONTINUE_END2   JSR     EVEN_CHECK          verify  input adress is even
                 MOVE.L  A2,IN_CURR_A        copy current input to IN_CURR_A
                 MOVE.L  A3,IN_END_A         copy end input to IN_END_A
 
-                * start building the string right after the input
-                * to avoid conflicts
-                MOVE.L  IN_END_A,OUT_START_A
-                ADDI.L  #2,OUT_START_A
+                * start building the string a bit after the source code ends
+                * (about $3000 to avoid conflicts)
+                MOVE.L  #$3000,OUT_START_A
                 MOVE.L  OUT_START_A,OUT_CURR_A
 
                 * it starts valid, so make IS_VALID 1
@@ -103,12 +88,46 @@ MAIN_LOOP
 END_MAIN_LOOP
 
     * add a 00 to the very end of the output
-    MOVEA.L   OUT_CURR_A,A1
-    MOVE.B    #0,(A1)+
+    MOVEA.L     OUT_CURR_A,A1
+    MOVE.B      #0,(A1)+
 
-    MOVEA.L   OUT_START_A,A1
-    MOVE.B    #13,D0
-    TRAP      #15
+    * --------------
+    * printing loop
+    * --------------
+    MOVEA.L     OUT_START_A,A1
+
+FINAL_PRINT_LOOP
+    MOVE.B      (A1)+,D1    ; print a single character
+
+    * the user enters the newlines themself, so don't print them
+    CMP.B       #$D,D1
+    BEQ         FINAL_PRINT_LOOP_SKIP ; don't print it if it's a newline
+    CMP.B       #$A,D1
+    BEQ         FINAL_PRINT_LOOP_SKIP ; don't print it if it's a newline
+
+    MOVE.B      #6,D0
+    TRAP        #15
+
+FINAL_PRINT_LOOP_SKIP
+  
+    TST.B       D1
+    BEQ         FINAL_PRINT_LOOP_END
+
+    CMP.B       #$D,D1    ; if it's a LF, we hit a newline, wait for enter
+    BNE         FINAL_PRINT_LOOP
+
+FINAL_PRINT_LOOP_WAIT
+    MOVE.B      #5,D0     ; get a single character
+    TRAP        #15
+    CMP.B       #$D,D1    ; and compare it with $D (carridge return or ENTER)
+    BNE         FINAL_PRINT_LOOP_WAIT ; if it's not that, wait again
+
+    BRA         FINAL_PRINT_LOOP
+
+FINAL_PRINT_LOOP_END
+
+    * MOVE.B    #13,D0
+    * TRAP      #15
 
     SIMHALT             ; halt simulator
 
@@ -210,6 +229,7 @@ INPUT_ODD       LEA      EVEN_CHECK_MSG,A1   load odd address enteresd msg
     *INCLUDE 'variables.x68'
     *INCLUDE 'strings.x68'
     INCLUDE     'CmdIdentify.X68'
+    INCLUDE 'OPCODE_TEST.X68'
                 
 WELCOME_MSG          dc.b    'Welcome to the MC68000 Microprocessor Disassembler',CR,LF,0   
 START_ADD_MSG        dc.b    'Please enter Start memory address in hexadecimal: ',0
@@ -235,3 +255,8 @@ IS_VALID            ds.b    1         allocate a byte for whether for error chec
      
 
     END    START        ; last line of source
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~
