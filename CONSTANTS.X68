@@ -64,6 +64,14 @@ SUBI_STR   DC.B  'SUBI',0
 SUBI_S     EQU   $0400
 SUBI_P     EQU   $FF00
 
+AND_STR    DC.B  'AND',0
+AND_S      EQU   $C000
+AND_P      EQU   $F000
+
+OR_STR     DC.B  'OR',0
+OR_S       EQU   $8000
+AORP       EQU   $F000
+
 BCC_STR DC.B    'BCC',$09,'$',0
 BCC_S   EQU     $6400
 BCC_P   EQU     $FF00
