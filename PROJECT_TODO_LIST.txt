@@ -1,0 +1,7 @@
+- fix and integrate LEA
+- add "do you want to disassemble some more" loop in main
+- LOTS of testing
+- comment the code
+- progress report
+- final presentation
+- final report
