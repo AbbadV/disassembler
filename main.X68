@@ -146,10 +146,19 @@ END_MAIN_LOOP
 
 FINAL_PRINT_LOOP
     MOVE.B      (A1)+,D1    ; print a single character
+
+    * the user enters the newlines themself, so don't print them
+    CMP.B       #$D,D1
+    BEQ         FINAL_PRINT_LOOP_SKIP ; don't print it if it's a newline
+    CMP.B       #$A,D1
+    BEQ         FINAL_PRINT_LOOP_SKIP ; don't print it if it's a newline
+
     MOVE.B      #6,D0
     TRAP        #15
+
+FINAL_PRINT_LOOP_SKIP
   
-    TST         D1
+    TST.B       D1
     BEQ         FINAL_PRINT_LOOP_END
 
     CMP.B       #$D,D1    ; if it's a LF, we hit a newline, wait for enter
@@ -164,7 +173,6 @@ FINAL_PRINT_LOOP_WAIT
     BRA         FINAL_PRINT_LOOP
 
 FINAL_PRINT_LOOP_END
-
 
     * MOVE.B    #13,D0
     * TRAP      #15
