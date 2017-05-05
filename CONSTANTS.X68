@@ -32,6 +32,10 @@ MOVEM_STR  DC.B  'MOVEM',0
 MOVEM_S    EQU   $4880
 MOVEM_P    EQU   $FB80
 
+LEA_STR    DC.B   'LEA',0
+LEA_S      EQA    $41C0
+LEA_P      EQA    $F1C0
+
 BRA_STR    DC.B  'BRA',0
 BRA_S      EQU   $6000
 BRA_P      EQU   $FF00
