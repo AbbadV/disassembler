@@ -1,6 +1,10 @@
 * -----------------------------------------------------------------------------
 * this converts the number in D1, converts it to ASCII, and prints it to the
 * output
+*
+* note: you MUST run 
+*     MOVE.L   A3,OUT_CURR_A
+* before running this command
 * -----------------------------------------------------------------------------
 PRINT_NUM
         MOVEM.L     D0-D7/A1-A2/A4-A6,-(SP)
