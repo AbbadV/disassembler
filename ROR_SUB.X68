@@ -73,7 +73,8 @@ ROR_DEST          *GET DATA REGISTER
           MOVE.B    #'D',(A3)+
  
           ANDI.W    #$0007,D1
-          ADD.B #$30,D1
+
+          ADD.B     #$30,D1
           MOVE.B    D1,(A3)+
           
 ROR_FIN          
@@ -103,9 +104,19 @@ ROR_IMM
     AND.W #$0E00,D7
     LSR.W #8,D7
     LSR.W #1,D7
+
+    TST.W D7
+    BEQ   ROR_EIGHT
+          
     ADD.B #$30,D7
     MOVE.B D7,(A3)+
+
     BRA ROR_DEST
+
+ROR_EIGHT
+    MOVE.B #'8',(A3)+
+    BRA    ROR_DEST
+
 ROR_EA
     MOVE.B    #$2E,(A3)+
     MOVE.B    #$57,(A3)+

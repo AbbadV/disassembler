@@ -64,6 +64,14 @@ SUBI_STR   DC.B  'SUBI',0
 SUBI_S     EQU   $0400
 SUBI_P     EQU   $FF00
 
+MULS_STR   DC.B  'MULS.W',0
+MULS_S     EQU   $C1C0
+MULS_P     EQU   $F1C0
+
+DIVU_STR   DC.B  'DIVU.W',0
+DIVU_S     EQU   $80C0
+DIVU_P     EQU   $F1C0
+
 AND_STR    DC.B  'AND',0
 AND_S      EQU   $C000
 AND_P      EQU   $F000

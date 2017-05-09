@@ -153,6 +153,15 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
+        * check DIVU
+        MOVE.W    D1,D2         ; move the value into D2 for temp storage
+        MOVE.W    #DIVU_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #DIVU_S,D4  
+        MOVE.W    #DIVU_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
         * check OR
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
         MOVE.W    #OR_P,D3     ; move values into registers for CMD_CHECK
@@ -167,6 +176,15 @@ CMD_IDENTIFY
         MOVE.W    #SUB_P,D3     ; move values into registers for CMD_CHECK
         MOVE.W    #SUB_S,D4  
         MOVE.W    #SUB_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check MULS
+        MOVE.W    D1,D2         ; move the value into D2 for temp storage
+        MOVE.W    #MULS_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #MULS_S,D4  
+        MOVE.W    #MULS_SUB,D5
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
@@ -337,7 +355,8 @@ NEGATIVE
 
 * ------------------------------------------------------------------------------
 
-        INCLUDE 'PRINT_SIZE.X68'
+        INCLUDE 'PRINT_SIZE_EARLY.X68'
+        INCLUDE 'PRINT_SIZE_LATE.X68'
         INCLUDE 'PRINT_SOURCE.X68'
         INCLUDE 'PRINT_DEST.X68'
         INCLUDE 'PRINT_NUM.X68'
@@ -357,7 +376,9 @@ NEGATIVE
         INCLUDE 'BGE_SUB.X68'
         INCLUDE 'BLT_SUB.X68'
         INCLUDE 'MOVEQ_SUB.X68'
+        INCLUDE 'DIVU_SUB.X68'
         INCLUDE 'SUB_SUB.X68'
+        INCLUDE 'MULS_SUB.X68'
         INCLUDE 'AND_SUB.X68'
         INCLUDE 'OR_SUB.X68'
         INCLUDE 'ADD_SUB.X68'

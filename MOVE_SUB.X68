@@ -64,7 +64,7 @@ MOVE_COPY
         
 MOVE_DONE
 
-        JSR       PRINT_SIZE_SUB
+        JSR       PRINT_SIZE_EARLY_SUB
         JSR       PRINT_SOURCE_SUB
         MOVE.B    #',',(A3)+
         JSR       PRINT_DEST_SUB

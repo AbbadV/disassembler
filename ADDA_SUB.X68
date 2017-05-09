@@ -75,10 +75,12 @@ ADDA_AONE
         BRA       ADDA_LONG_AN
 
 ADDA_WORD_AN
+        MOVE.B    #1,SIZE_BUFFER
         MOVE.B    #'W',(A3)+
         BRA       ADDA_PRINT_SIZE_DONE
 
 ADDA_LONG_AN
+        MOVE.B    #2,SIZE_BUFFER
         MOVE.B    #'L',(A3)+
         BRA       ADDA_PRINT_SIZE_DONE
 

@@ -124,7 +124,7 @@ PRINT_SOURCE_MEMORY_ABS_L
 
 PRINT_SOURCE_MEMORY_IMM
           * check if it's long or short addressing
-          CMP.B     #2,D6
+          CMP.B     #2,SIZE_BUFFER
           BEQ       PRINT_SOURCE_MEMORY_IMM_L
           BRA       PRINT_SOURCE_MEMORY_IMM_W
 

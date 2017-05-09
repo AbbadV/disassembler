@@ -65,56 +65,33 @@ ADD_COPY
 ADD_DONE
   
         * D4 = size       ( 0 = B, 1 = W, 2 = L)
-        * D5 = direction  ( 0 = Dn first, 1 = <ea> first)
 
         MOVE.W    D1,D2
         LSR.W     #6,D2
         ANDI.W    #7,D2
 
         CMP.W     #0,D2
-        BEQ       ADD_BYTE_DN
+        BEQ       ADD_DN
         CMP.W     #1,D2
-        BEQ       ADD_WORD_DN
+        BEQ       ADD_DN
         CMP.W     #2,D2
-        BEQ       ADD_LONG_DN
+        BEQ       ADD_DN
 
         CMP.W     #4,D2
-        BEQ       ADD_BYTE_EA
+        BEQ       ADD_EA
         CMP.W     #5,D2
-        BEQ       ADD_WORD_EA
+        BEQ       ADD_EA
         CMP.W     #6,D2
-        BEQ       ADD_LONG_EA
+        BEQ       ADD_EA
         
         * if nothing is found just jump to the end
         BRA       ADD_PARAM_DONE
 
-ADD_BYTE_DN
-        MOVE.B    #0,D4
+ADD_DN
         MOVE.B    #0,D5
         BRA       ADD_PARAM_DONE
 
-ADD_WORD_DN
-        MOVE.B    #1,D4
-        MOVE.B    #0,D5
-        BRA       ADD_PARAM_DONE
-
-ADD_LONG_DN
-        MOVE.B    #2,D4
-        MOVE.B    #0,D5
-        BRA       ADD_PARAM_DONE
-
-ADD_BYTE_EA
-        MOVE.B    #0,D4
-        MOVE.B    #1,D5
-        BRA       ADD_PARAM_DONE
-        
-ADD_WORD_EA
-        MOVE.B    #1,D4
-        MOVE.B    #1,D5
-        BRA       ADD_PARAM_DONE
-
-ADD_LONG_EA
-        MOVE.B    #2,D4
+ADD_EA
         MOVE.B    #1,D5
         BRA       ADD_PARAM_DONE
 
@@ -124,27 +101,8 @@ ADD_PARAM_DONE
         * print the size
         * -------------------
 
-        MOVE.B    #'.',(A3)+
-        CMP.B     #0,D4
-        BEQ       ADD_PRINT_SIZE_BYTE
-        CMP.B     #1,D4
-        BEQ       ADD_PRINT_SIZE_WORD
-        CMP.B     #2,D4
-        BEQ       ADD_PRINT_SIZE_LONG
+        JSR       PRINT_SIZE_LATE_SUB
 
-        BRA       ADD_PRINT_SIZE_DONE
-
-ADD_PRINT_SIZE_BYTE
-        MOVE.B    #'B',(A3)+
-        BRA       ADD_PRINT_SIZE_DONE
-ADD_PRINT_SIZE_WORD
-        MOVE.B    #'W',(A3)+
-        BRA       ADD_PRINT_SIZE_DONE
-ADD_PRINT_SIZE_LONG
-        MOVE.B    #'L',(A3)+
-        BRA       ADD_PRINT_SIZE_DONE
-
-ADD_PRINT_SIZE_DONE
         MOVE.B    #9,(A3)+
 
         * -------------------

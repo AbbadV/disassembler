@@ -64,7 +64,6 @@ OR_COPY
         
 OR_DONE
   
-        * D4 = size       ( 0 = B, 1 = W, 2 = L)
         * D5 = direction  ( 0 = Dn first, 1 = <ea> first)
 
         MOVE.W    D1,D2
@@ -72,49 +71,27 @@ OR_DONE
         ANDI.W    #7,D2
 
         CMP.W     #0,D2
-        BEQ       OR_BYTE_DN
+        BEQ       OR_DN
         CMP.W     #1,D2
-        BEQ       OR_WORD_DN
+        BEQ       OR_DN
         CMP.W     #2,D2
-        BEQ       OR_LONG_DN
+        BEQ       OR_DN
 
         CMP.W     #4,D2
-        BEQ       OR_BYTE_EA
+        BEQ       OR_EA
         CMP.W     #5,D2
-        BEQ       OR_WORD_EA
+        BEQ       OR_EA
         CMP.W     #6,D2
-        BEQ       OR_LONG_EA
+        BEQ       OR_EA
         
         * if nothing is found just jump to the end
         BRA       OR_PARAM_DONE
 
-OR_BYTE_DN
-        MOVE.B    #0,D4
+OR_DN
         MOVE.B    #0,D5
         BRA       OR_PARAM_DONE
 
-OR_WORD_DN
-        MOVE.B    #1,D4
-        MOVE.B    #0,D5
-        BRA       OR_PARAM_DONE
-
-OR_LONG_DN
-        MOVE.B    #2,D4
-        MOVE.B    #0,D5
-        BRA       OR_PARAM_DONE
-
-OR_BYTE_EA
-        MOVE.B    #0,D4
-        MOVE.B    #1,D5
-        BRA       OR_PARAM_DONE
-        
-OR_WORD_EA
-        MOVE.B    #1,D4
-        MOVE.B    #1,D5
-        BRA       OR_PARAM_DONE
-
-OR_LONG_EA
-        MOVE.B    #2,D4
+OR_EA
         MOVE.B    #1,D5
         BRA       OR_PARAM_DONE
 
@@ -124,27 +101,7 @@ OR_PARAM_DONE
         * print the size
         * -------------------
 
-        MOVE.B    #'.',(A3)+
-        CMP.B     #0,D4
-        BEQ       OR_PRINT_SIZE_BYTE
-        CMP.B     #1,D4
-        BEQ       OR_PRINT_SIZE_WORD
-        CMP.B     #2,D4
-        BEQ       OR_PRINT_SIZE_LONG
-
-        BRA       OR_PRINT_SIZE_DONE
-
-OR_PRINT_SIZE_BYTE
-        MOVE.B    #'B',(A3)+
-        BRA       OR_PRINT_SIZE_DONE
-OR_PRINT_SIZE_WORD
-        MOVE.B    #'W',(A3)+
-        BRA       OR_PRINT_SIZE_DONE
-OR_PRINT_SIZE_LONG
-        MOVE.B    #'L',(A3)+
-        BRA       OR_PRINT_SIZE_DONE
-
-OR_PRINT_SIZE_DONE
+        JSR       PRINT_SIZE_LATE_SUB
         MOVE.B    #9,(A3)+
 
         * -------------------
@@ -172,7 +129,6 @@ OR_END
 
 *------------------------------------------------------------------------------
 OR_EA_TO_DN
-        MOVE.B    D4,D2
         JSR       PRINT_SOURCE_SUB    ; the "source" is actually the source here
         MOVE.B    #',',(A3)+
         MOVE.B    #'D',(A3)+
@@ -195,7 +151,6 @@ OR_DN_TO_EA
         ADDI.W    #$30,D2
         MOVE.B    D2,(A3)+
         MOVE.B    #',',(A3)+
-        MOVE.B    D4,D2
         JSR       PRINT_SOURCE_SUB    ; the "source" is actually the source here
 
         RTS

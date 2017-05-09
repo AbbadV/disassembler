@@ -72,49 +72,27 @@ AND_DONE
         ANDI.W    #7,D2
 
         CMP.W     #0,D2
-        BEQ       AND_BYTE_DN
+        BEQ       AND_DN
         CMP.W     #1,D2
-        BEQ       AND_WORD_DN
+        BEQ       AND_DN
         CMP.W     #2,D2
-        BEQ       AND_LONG_DN
+        BEQ       AND_DN
 
         CMP.W     #4,D2
-        BEQ       AND_BYTE_EA
+        BEQ       AND_EA
         CMP.W     #5,D2
-        BEQ       AND_WORD_EA
+        BEQ       AND_EA
         CMP.W     #6,D2
-        BEQ       AND_LONG_EA
+        BEQ       AND_EA
         
         * if nothing is found just jump to the end
         BRA       AND_PARAM_DONE
 
-AND_BYTE_DN
-        MOVE.B    #0,D4
+AND_DN
         MOVE.B    #0,D5
         BRA       AND_PARAM_DONE
 
-AND_WORD_DN
-        MOVE.B    #1,D4
-        MOVE.B    #0,D5
-        BRA       AND_PARAM_DONE
-
-AND_LONG_DN
-        MOVE.B    #2,D4
-        MOVE.B    #0,D5
-        BRA       AND_PARAM_DONE
-
-AND_BYTE_EA
-        MOVE.B    #0,D4
-        MOVE.B    #1,D5
-        BRA       AND_PARAM_DONE
-        
-AND_WORD_EA
-        MOVE.B    #1,D4
-        MOVE.B    #1,D5
-        BRA       AND_PARAM_DONE
-
-AND_LONG_EA
-        MOVE.B    #2,D4
+AND_EA
         MOVE.B    #1,D5
         BRA       AND_PARAM_DONE
 
@@ -124,27 +102,7 @@ AND_PARAM_DONE
         * print the size
         * -------------------
 
-        MOVE.B    #'.',(A3)+
-        CMP.B     #0,D4
-        BEQ       AND_PRINT_SIZE_BYTE
-        CMP.B     #1,D4
-        BEQ       AND_PRINT_SIZE_WORD
-        CMP.B     #2,D4
-        BEQ       AND_PRINT_SIZE_LONG
-
-        BRA       AND_PRINT_SIZE_DONE
-
-AND_PRINT_SIZE_BYTE
-        MOVE.B    #'B',(A3)+
-        BRA       AND_PRINT_SIZE_DONE
-AND_PRINT_SIZE_WORD
-        MOVE.B    #'W',(A3)+
-        BRA       AND_PRINT_SIZE_DONE
-AND_PRINT_SIZE_LONG
-        MOVE.B    #'L',(A3)+
-        BRA       AND_PRINT_SIZE_DONE
-
-AND_PRINT_SIZE_DONE
+        JSR       PRINT_SIZE_LATE_SUB
         MOVE.B    #9,(A3)+
 
         * -------------------
