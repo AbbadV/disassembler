@@ -7,6 +7,7 @@ PRINT_SOURCE_SUB
           * D1 stores the opcode, so we isolate the source info and shift it
           * to the end
           MOVE.L    D1,D7 ; keep a backup
+          MOVE.B    D2,D6 ; keep a backup
           ANDI.W    #$3F,D1
 
           * D2 is the mode, so isolate and shift
@@ -123,13 +124,7 @@ PRINT_SOURCE_MEMORY_ABS_L
 
 PRINT_SOURCE_MEMORY_IMM
           * check if it's long or short addressing
-          MOVE.W    D7,D4
-          ANDI.W    #$3000,D4
-          LSR.W     #8,D4
-          LSR.W     #4,D4
-          ANDI.W    #3,D4
-
-          CMP.B     #2,D4
+          CMP.B     #2,D6
           BEQ       PRINT_SOURCE_MEMORY_IMM_L
           BRA       PRINT_SOURCE_MEMORY_IMM_W
 

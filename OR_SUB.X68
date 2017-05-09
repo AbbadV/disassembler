@@ -172,7 +172,7 @@ OR_END
 
 *------------------------------------------------------------------------------
 OR_EA_TO_DN
-
+        MOVE.B    D4,D2
         JSR       PRINT_SOURCE_SUB    ; the "source" is actually the source here
         MOVE.B    #',',(A3)+
         MOVE.B    #'D',(A3)+
@@ -195,6 +195,7 @@ OR_DN_TO_EA
         ADDI.W    #$30,D2
         MOVE.B    D2,(A3)+
         MOVE.B    #',',(A3)+
+        MOVE.B    D4,D2
         JSR       PRINT_SOURCE_SUB    ; the "source" is actually the source here
 
         RTS
