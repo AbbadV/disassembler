@@ -31,7 +31,15 @@ LEA_COPY
 LEA_DONE 
          JSR      PRINT_SOURCE_SUB
          MOVE.B   $2C,(A3)+        ; print comma 
-         JSR      PRINT_DEST_SUB
+         CLR.L    D3                ; clear d3 for later use 
+         MOVE.W   D1,D3           ;copy An to D3
+         ANDI.L   #$0D00,D3        ; mask off the non address reg bits
+         LSR.W    #$08,D3           ; shift 8 bits left 
+         LSR.W    #$01,D3           ; shift additional 1 bit  
+         ADDI.W   #30,D3             ; convert to ASCII
+         MOVE.B   D3,(A3)+          ; print the n in An
+
+         *JSR      PRINT_DEST_SUB
          
 
         * ----------------------------------------------------
