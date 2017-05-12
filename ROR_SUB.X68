@@ -104,14 +104,21 @@ ROR_IMM
     LSR.W #8,D7
     LSR.W #1,D7
     ADD.B #$30,D7
+    CMP #$30,D7
+    BEQ ROR_ADD_EIGHT
+CONT_ROR_IMM
     MOVE.B D7,(A3)+
     BRA ROR_DEST
+ROR_ADD_EIGHT
+    ADDI    #$8,D7
+    BRA CONT_ROR_IMM    
 ROR_EA
     MOVE.B    #$2E,(A3)+
     MOVE.B    #$57,(A3)+
     MOVE.B #$09,(A3)+
     JSR PRINT_SOURCE_SUB
     BRA ROR_FIN
+
 
 
 
