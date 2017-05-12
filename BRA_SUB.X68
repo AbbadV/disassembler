@@ -43,6 +43,9 @@ BRA_DONE
         MOVE.L D3,D1
 
 BRA_FINISH
+        MOVE.B  #9,(A3)+
+        MOVE.B  '$',(A3)+
+
         MOVE.L    A3,OUT_CURR_A ; move the current A3 back to the output pointer
 
         JSR PRINT_NUM
