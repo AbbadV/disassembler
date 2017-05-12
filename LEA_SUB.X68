@@ -62,9 +62,4 @@ LEA_DONE
 *------------------------------------------------------------------------------
 
 
-    SIMHALT             ; halt simulator
-    
-
-* Put variables and constants here
-
-    END    START        ; last line of source
+   
