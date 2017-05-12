@@ -29,15 +29,19 @@ LEA_COPY
         BRA       LEA_COPY      ; do it again
         
 LEA_DONE 
+         MOVE.B #$09,(A3)+
          JSR      PRINT_SOURCE_SUB
-         MOVE.B   $2C,(A3)+        ; print comma 
+         MOVE.B   #$2C,(A3)+        ; print comma 
+         MOVE.B #'A',(A3)+
          CLR.L    D3                ; clear d3 for later use 
          MOVE.W   D1,D3           ;copy An to D3
-         ANDI.L   #$0D00,D3        ; mask off the non address reg bits
-         LSR.W    #$08,D3           ; shift 8 bits left 
-         LSR.W    #$01,D3           ; shift additional 1 bit  
-         ADDI.W   #30,D3             ; convert to ASCII
+         ANDI.W   #$0E00,D3        ; mask off the non address reg bits
+         LSR.L    #$08,D3           ; shift 8 bits left 
+         LSR.L    #$01,D3           ; shift additional 1 bit  
+         ADDI.B   #$30,D3             ; convert to ASCII
          MOVE.B   D3,(A3)+          ; print the n in An
+         MOVE.B    #$0A,(A3)+
+         MOVE.B    #$0D,(A3)+
 
          *JSR      PRINT_DEST_SUB
          
@@ -62,4 +66,4 @@ LEA_DONE
 *------------------------------------------------------------------------------
 
 
-   
+
