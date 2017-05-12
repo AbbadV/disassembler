@@ -26,6 +26,60 @@ CMD_IDENTIFY
         MOVE.B    #9,(A3)+      ; print tab character
         MOVE.L    A3,OUT_CURR_A
         MOVE.W    (A1),D1       ; D1 is the current opcode
+
+        * check ASL (memory signature)
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ASLM_P,D3   ; move values into registers for CMD_CHECK
+        MOVE.W    #ASLM_S,D4  
+        MOVE.W    #ASL_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check ASR (memory signature)
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ASRM_P,D3   ; move values into registers for CMD_CHECK
+        MOVE.W    #ASRM_S,D4  
+        MOVE.W    #ASR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check LSL (memory signature)
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #LSLM_P,D3   ; move values into registers for CMD_CHECK
+        MOVE.W    #LSLM_S,D4  
+        MOVE.W    #LSL_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check LSR (memory signature)
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #LSRM_P,D3   ; move values into registers for CMD_CHECK
+        MOVE.W    #LSRM_S,D4  
+        MOVE.W    #LSR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check ROL (memory signature)
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ROLM_P,D3   ; move values into registers for CMD_CHECK
+        MOVE.W    #ROLM_S,D4  
+        MOVE.W    #ROL_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check ROR (memory signature)
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #RORM_P,D3   ; move values into registers for CMD_CHECK
+        MOVE.W    #RORM_S,D4  
+        MOVE.W    #ROR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
         
         * check SUBI
         MOVE.W    D1,D2         ; move the value into D2 for temp storage
@@ -225,28 +279,10 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
-        * check ASL (memory signature)
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ASLM_P,D3   ; move values into registers for CMD_CHECK
-        MOVE.W    #ASLM_S,D4  
-        MOVE.W    #ASL_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-
         * check ASR
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
         MOVE.W    #ASR_P,D3    ; move values into registers for CMD_CHECK
         MOVE.W    #ASR_S,D4  
-        MOVE.W    #ASR_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-
-        * check ASR (memory signature)
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ASRM_P,D3   ; move values into registers for CMD_CHECK
-        MOVE.W    #ASRM_S,D4  
         MOVE.W    #ASR_SUB,D5
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
@@ -261,28 +297,10 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
-        * check LSL (memory signature)
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #LSLM_P,D3   ; move values into registers for CMD_CHECK
-        MOVE.W    #LSLM_S,D4  
-        MOVE.W    #LSL_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-
         * check LSR
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
         MOVE.W    #LSR_P,D3    ; move values into registers for CMD_CHECK
         MOVE.W    #LSR_S,D4  
-        MOVE.W    #LSR_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-
-        * check LSR (memory signature)
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #LSRM_P,D3   ; move values into registers for CMD_CHECK
-        MOVE.W    #LSRM_S,D4  
         MOVE.W    #LSR_SUB,D5
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
@@ -297,28 +315,10 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
-        * check ROL (memory signature)
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ROLM_P,D3   ; move values into registers for CMD_CHECK
-        MOVE.W    #ROLM_S,D4  
-        MOVE.W    #ROL_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-
         * check ROR
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
         MOVE.W    #ROR_P,D3    ; move values into registers for CMD_CHECK
         MOVE.W    #ROR_S,D4  
-        MOVE.W    #ROR_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-
-        * check ROR (memory signature)
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #RORM_P,D3   ; move values into registers for CMD_CHECK
-        MOVE.W    #RORM_S,D4  
         MOVE.W    #ROR_SUB,D5
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
