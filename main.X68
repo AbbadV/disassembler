@@ -142,6 +142,7 @@ END_MAIN_LOOP
     * printing loop
     * --------------
     MOVEA.L     OUT_START_A,A1
+    MOVE.B      #0,D6   ; D6 is our counter
 
 FINAL_PRINT_LOOP
     MOVE.B      (A1)+,D1    ; print a single character
@@ -163,7 +164,21 @@ FINAL_PRINT_LOOP_SKIP
     CMP.B       #$D,D1    ; if it's a LF, we hit a newline, wait for enter
     BNE         FINAL_PRINT_LOOP
 
+    ADDI.B      #1,D6     ; increment the counter
+    CMP.B       #INSTRUCTIONS_PER_SCREEN,D6
+    BEQ         FINAL_PRINT_LOOP_WAIT
+
+FINAL_PRINT_LOOP_NEWLINE
+    MOVE.B      #6,D0
+    MOVE.B      #$A,D1
+    TRAP        #15
+    MOVE.B      #$D,D1
+    TRAP        #15
+
+    BRA         FINAL_PRINT_LOOP
+
 FINAL_PRINT_LOOP_WAIT
+    CLR.B       D6
     MOVE.B      #5,D0     ; get a single character
     TRAP        #15
     CMP.B       #$D,D1    ; and compare it with $D (carridge return or ENTER)

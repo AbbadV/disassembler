@@ -4,6 +4,8 @@
 * Written by James Winters
 * ------------------------------------------------------------------------------
 
+INSTRUCTIONS_PER_SCREEN   EQU   32
+
 PRINT_NUM_STACK DS.B  8
 
 BAD_COMMAND_STR DC.B  'DATA',$09,'$',0
