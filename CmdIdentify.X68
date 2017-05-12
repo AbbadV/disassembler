@@ -230,6 +230,60 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
+        * check ASRM
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ASRM_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ASRM_S,D4  
+        MOVE.W    #ASR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal        
+
+        * check ASLM
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ASLM_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ASLM_S,D4  
+        MOVE.W    #ASL_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal  
+        
+        * check LSLM
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #LSLM_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #LSLM_S,D4  
+        MOVE.W    #LSL_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+        
+        * check LSRM
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #LSRM_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #LSRM_S,D4  
+        MOVE.W    #LSR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check RORM
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #RORM_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #RORM_S,D4  
+        MOVE.W    #ROR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+        
+        * check ROLM
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ROLM_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ROLM_S,D4  
+        MOVE.W    #ROL_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal  
+
         * check ASR
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
         MOVE.W    #ASR_P,D3    ; move values into registers for CMD_CHECK
@@ -284,59 +338,7 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal     
 
-        * check ASRM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ASRM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #ASRM_S,D4  
-        MOVE.W    #ASR_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal        
-
-        * check ASLM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ASLM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #ASLM_S,D4  
-        MOVE.W    #ASL_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal  
-        
-        * check LSLM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #LSLM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #LSLM_S,D4  
-        MOVE.W    #LSL_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-        
-        * check LSRM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #LSRM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #LSRM_S,D4  
-        MOVE.W    #LSR_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-
-        * check RORM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #RORM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #RORM_S,D4  
-        MOVE.W    #ROR_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-        
-        * check ROLM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ROLM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #ROLM_S,D4  
-        MOVE.W    #ROL_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal        
+      
 
 
 
@@ -415,6 +417,7 @@ NEGATIVE
 * NOP_P   EQU   $FFFF
 
 * ------------------------------------------------------------------------------
+
 
 
 

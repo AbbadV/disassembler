@@ -6,6 +6,7 @@
 *------------------------------------------------------------
     ORG    $7000
 MAIN    
+    NOP
     MOVE.B  D0,D1
     MOVE.B  (A3),(A4)+
     MOVE.B  (A4)+,-(A5)
@@ -267,6 +268,10 @@ MAIN
     SUB.L  D4,-(A5)              
     SUB.L  D5,$6000              
     SUB.L  D6,$8000    
+    SUBI.B  #$12,D0
+    SUBI.W  #$1234,-(A1)
+    SUBI.L  #$1234AAAA,$1234
+    SUBI.L  #$1234AAAA,$1234AAAA
 
     MULS  D0,D0                                 
     MULS  (A1),D2               
@@ -289,30 +294,6 @@ MAIN
     LEA (A1),A2                            
     LEA $4000,A5               
     LEA $A000,A6         
-    
-    CLR.B  D1                         
-    CLR.B  (A3)              
-    CLR.B  (A4)+             
-    CLR.B  -(A5)              
-    CLR.B  $6000              
-    CLR.B  $8000             
-    CLR.B  $A000
-
-    CLR.W  D1                         
-    CLR.W  (A3)              
-    CLR.W  (A4)+             
-    CLR.W  -(A5)              
-    CLR.W  $6000              
-    CLR.W  $8000             
-    CLR.W  $A000     
-    
-    CLR.L  D1                         
-    CLR.L  (A3)              
-    CLR.L  (A4)+             
-    CLR.L  -(A5)              
-    CLR.L  $6000              
-    CLR.L  $8000             
-    CLR.L  $A000
     
     AND.B  D0,D0                 
     AND.B  (A1),D2                
@@ -408,36 +389,7 @@ MAIN
     OR.L  D3,(A4)+              
     OR.L  D4,-(A5)              
     OR.L  D5,$6000              
-    OR.L  D6,$8000
-    
-    CMP.B  D0,D0                 
-    CMP.B  (A1),D2                
-    CMP.B  (A2)+,D3              
-    CMP.B  -(A3),D4               
-    CMP.B  $4000,D5              
-    CMP.B  $A000,D6               
-    CMP.B  #$70,D7                         
-    
-    CMP.W  D0,D0                 
-    CMP.W  A0,D1                 
-    CMP.W  (A1),D2                
-    CMP.W  (A2)+,D3               
-    CMP.W  -(A3),D4               
-    CMP.W  $4000,D5               
-    CMP.W  $A000,D6               
-    CMP.W  #$70,D7               
-    CMP.W  #$7000,D0                        
-    
-    CMP.L  D0,D0                  
-    CMP.L  A0,D1                 
-    CMP.L  (A1),D2               
-    CMP.L  (A2)+,D3               
-    CMP.L  -(A3),D4              
-    CMP.L  $4000,D5              
-    CMP.L  $A000,D6              
-    CMP.L  #$70,D7                
-    CMP.L  #$7000,D0              
-    CMP.L  #$70000000,D1              
+    OR.L  D6,$8000             
     
     ASL     (A0)
     ASR     (A1)+
@@ -470,8 +422,9 @@ MAIN
     ROL.L    D7,D1
     
     BCC     FARGONE
-    BGT     FARGONE
-    BLE     FARGONE
+    BLT     FARGONE
+    BGE     FARGONE
+    BRA     FARGONE
     
     JSR     FARGONE
     JSR     $A000
@@ -481,6 +434,7 @@ FARGONE    RTS
     
 
     
+
 
 
 
