@@ -10,10 +10,10 @@ RTS_SUB
         * D1 - the actual opcode
         *
         MOVEA.L   #0,A1             ; load the current opcode into a register
-        MOVEA.L   IN_CURR_A,A1
+        MOVEA.L   IN_CURR_A,A1      ; move the current input pointer to a1
         MOVE.W    (A1)+,D1          ; not necessary here, but for other cmds
 
-        MOVEA.L   #0,A3
+        MOVEA.L   #0,A3         ;clear current position of output address for later use 
         MOVEA.L   OUT_CURR_A,A3 ; move the current output pointer to A3
         LEA       RTS_STR,A4     ; move the to-be-printed string to A4
 
@@ -30,18 +30,9 @@ RTS_COPY
         
 RTS_DONE
 
-        * ----------------------------------------------------
-        * ----------------------------------------------------
-        *
-        * At this point the name is printed and nothing else
-        *
-        * most if not all of your code is going to go here
-        *
-        * ----------------------------------------------------
-        * ----------------------------------------------------
 
-        MOVE.B    #$0A,(A3)+
-        MOVE.B    #$0D,(A3)+
+        MOVE.B    #$0A,(A3)+    ; print line feed and increment pointer
+        MOVE.B    #$0D,(A3)+    ; print carriage return and increment pointer
 
         MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer
         MOVE.L    A3,OUT_CURR_A ; move the current A3 back to the output pointer
