@@ -29,10 +29,10 @@ LEA_COPY
         BRA       LEA_COPY      ; do it again
         
 LEA_DONE 
-         MOVE.B #$09,(A3)+
-         JSR      PRINT_SOURCE_SUB
+         MOVE.B #$09,(A3)+      ; print a tab character 
+         JSR      PRINT_SOURCE_SUB   ; run the source print subroutine
          MOVE.B   #$2C,(A3)+        ; print comma 
-         MOVE.B #'A',(A3)+
+         MOVE.B #'A',(A3)+           ;Print 'A'
          CLR.L    D3                ; clear d3 for later use 
          MOVE.W   D1,D3           ;copy An to D3
          ANDI.W   #$0E00,D3        ; mask off the non address reg bits
@@ -40,23 +40,10 @@ LEA_DONE
          LSR.L    #$01,D3           ; shift additional 1 bit  
          ADDI.B   #$30,D3             ; convert to ASCII
          MOVE.B   D3,(A3)+          ; print the n in An
-         MOVE.B    #$0A,(A3)+
-         MOVE.B    #$0D,(A3)+
+         MOVE.B    #$0A,(A3)+        ; print the line feed 
+         MOVE.B    #$0D,(A3)+         ; print the carriage return
 
-         *JSR      PRINT_DEST_SUB
-         
-
-        * ----------------------------------------------------
-        * ----------------------------------------------------
-        *
-        * At this point the name is printed and nothing else
-        *
-        * most if not all of your code is going to go here
         
-        *
-        * ----------------------------------------------------
-        * ----------------------------------------------------
-
         MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer
         MOVE.L    A3,OUT_CURR_A ; move the current A3 back to the output pointer
 
