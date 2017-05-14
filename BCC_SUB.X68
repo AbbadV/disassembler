@@ -10,12 +10,12 @@ BCC_SUB
         * D1 - the actual opcode
         *
         MOVEA.L   #0,A1             ; load the current opcode into a register
-        MOVEA.L   IN_CURR_A,A1
-        MOVE.L  A1,D3
-        ADDQ.L  #2,D3
+        MOVEA.L   IN_CURR_A,A1      ; move the current input pointer to A1
+        MOVE.L  A1,D3               ; move the current input pointer to D3
+        ADDQ.L  #2,D3               ; increment D3 by 2
         MOVE.W    (A1)+,D1          ; not necessary here, but for other cmds
 
-        MOVEA.L   #0,A3
+        MOVEA.L   #0,A3         ; clear A3 for later use
         MOVEA.L   OUT_CURR_A,A3 ; move the current output pointer to A3
         LEA       BCC_STR,A4     ; move the to-be-printed string to A4
 
