@@ -191,7 +191,51 @@ FINAL_PRINT_LOOP_END
     * MOVE.B    #13,D0
     * TRAP      #15
 
-    SIMHALT             ; halt simulator
+
+* --------------------------
+* ask the user to run again
+* --------------------------
+
+                LEA         RUN_AGAIN_MSG,A1    load message to A1
+                MOVE.W      #14,D0              display the string at A1
+                TRAP        #15                 run task 14
+
+ASK_USER_AGAIN
+                MOVE.B      #5,D0     ; get a single character
+                TRAP        #15
+
+                CMP.B       #'y',D1   ; check if the user entered a y
+                BEQ         RESET_PROGRAM ; if so, get ready to repeat program
+                CMP.B       #'Y',D1   ; check if the user entered a y
+                BEQ         RESET_PROGRAM
+
+                CMP.B       #'n',D1   ; check if the user entered a y
+                BEQ         EXIT_PROGRAM
+                CMP.B       #'N',D1   ; check if the user entered a y
+                BEQ         EXIT_PROGRAM
+
+                * the user entered something else, so ask again
+                LEA         NOT_Y_OR_N_MSG,A1   load message to A1
+                MOVE.W      #14,D0              display the string at A1
+                TRAP        #15                 run task 14
+
+                BRA         ASK_USER_AGAIN
+
+RESET_PROGRAM
+                MOVE.B      #6,D0     ; print a newline
+                MOVE.B      #$A,D1
+                TRAP        #15
+                MOVE.B      #$D,D1
+                TRAP        #15
+
+                BRA         RD_START_INPUT  ; then go back to the start
+
+EXIT_PROGRAM
+                LEA         GOODBYE_MSG,A1      load message to A1
+                MOVE.W      #14,D0              display the string at A1
+                TRAP        #15                 run task 14
+
+                SIMHALT             ; halt simulator
 
 * this was bisrat's old loop
 * MAIN_LOOP       CMP.L   IN_CURR_A,IN_END_A     IS CURRENT LESS THAN END?               
@@ -299,14 +343,17 @@ INPUT_ERROR_MSG      dc.b    'ERROR: Invalid address entered. Please try again.'
 END_ADD_SMALLER_MSG  dc.b    'ERROR: End address can not be less than starting address',CR,LF,0
 ADDR_BELOW_MSG       dc.b    'ERROR: Address below minimum. enter address greater than or equal to $7000',CR,LF,0
 ADDR_ABOVE_MSG       dc.b    'ERROR: Address above maximum. enter address less than or equal to $00FFFFFE',CR,LF,0
-EVEN_CHECK_MSG        dc.b    'ERROR: odd address entered. please enter even address',CR,LF,0       
+EVEN_CHECK_MSG       dc.b    'ERROR: odd address entered. please enter even address',CR,LF,0       
+RUN_AGAIN_MSG        dc.b    'Would you like to disassemble some more? (y or n) ',0
+NOT_Y_OR_N_MSG       dc.b    CR,LF,'Not recognized: please enter a y or n ',0
+GOODBYE_MSG          dc.b    CR,LF,'Goodbye and please give us an A',0
 IN_START_A           ds.b    4        allocate 4 bytes of memory to store starting memory address input  
-IN_CURR_A         ds.b    4        allocate 4 bytes of memory to store current memory address
+IN_CURR_A            ds.b    4        allocate 4 bytes of memory to store current memory address
 IN_END_A             ds.b    4        allocate 4 bytes of memory to store ending memory address input
 OUT_START_A          ds.b    4         allocate 4 bytes of memory to store starting program output
-OUT_CURR_A          ds.b    4         allocate 4 bytes of memory to store current program output
-IS_VALID            ds.b    1         allocate a byte for whether for error checking
-SIZE_BUFFER         ds.b    1         allocate a byte for the current size of the op-code
+OUT_CURR_A           ds.b    4         allocate 4 bytes of memory to store current program output
+IS_VALID             ds.b    1         allocate a byte for whether for error checking
+SIZE_BUFFER          ds.b    1         allocate a byte for the current size of the op-code
       
 
     INCLUDE 'CONSTANTS.X68'
