@@ -178,9 +178,9 @@ FINAL_PRINT_LOOP_NEWLINE
     BRA         FINAL_PRINT_LOOP
 
 FINAL_PRINT_LOOP_WAIT
-    CLR.B       D6
-    MOVE.B      #5,D0     ; get a single character
-    TRAP        #15
+    CLR.B       D6         ; clear D6 for later use 
+    MOVE.B      #5,D0     ; get a single character from keyboard and store it in D1
+    TRAP        #15       ; run trap task #5
     CMP.B       #$D,D1    ; and compare it with $D (carridge return or ENTER)
     BNE         FINAL_PRINT_LOOP_WAIT ; if it's not that, wait again
 
@@ -188,8 +188,8 @@ FINAL_PRINT_LOOP_WAIT
 
 FINAL_PRINT_LOOP_END
 
-    * MOVE.B    #13,D0
-    * TRAP      #15
+    * MOVE.B    #13,D0  ; display string at A1 with CR,LF
+    * TRAP      #15     ; run task #13
 
     SIMHALT             ; halt simulator
 
