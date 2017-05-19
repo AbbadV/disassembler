@@ -2,7 +2,7 @@ PRINT_SOURCE_SUB
 
           * we want to modify A1 & A3 (it's like a pass-by-reference parameter)
           * so we skip A1 & A3
-          MOVEM.L   D0-D1/A0/A2/A4-A6,-(SP)
+          MOVEM.L   D0-D7/A0/A2/A4-A6,-(SP)
 
           * D1 stores the opcode, so we isolate the source info and shift it
           * to the end
@@ -27,7 +27,7 @@ PRINT_SOURCE_MEM
 
 PRINT_SOURCE_END
           MOVE.L    A3,OUT_CURR_A
-          MOVEM.L   (SP)+,D0-D1/A0/A2/A4-A6
+          MOVEM.L   (SP)+,D0-D7/A0/A2/A4-A6
           RTS
 
 * -----------------------------------------------------------------------------
