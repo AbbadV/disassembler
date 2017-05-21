@@ -1,24 +1,8 @@
 *------------------------------------------------------------------------------
-* This is a skeleton to help write all the _SUP files
-*
-* basically here's how they all work:
-*
 * IN_CURRENT_A contains the address of the current op-code we're looking at
 * and re-constructing into the command
-*
-* right after it are any immediate values and/or addresses in the command
-*
-* --------------------------------------------------------------------
-* YOU ARE RESPONSIBLE FOR MOVING IN_CURRENT_A OVER TO THE NEXT COMMAND
-* --------------------------------------------------------------------
-*
-* to output the text, push the characters onto the output stack with
-*
-*   MOVE.B  $__,(A3)+
-* 
-* also, replace ADD with the name of the command, all variables and labels are
-* global in assembly, so each one has to be 100% unique
-*
+*------------------------------------------------------------------------------
+
 
 
 ADDI_SUB
