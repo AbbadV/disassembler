@@ -77,7 +77,7 @@ RD_START_INPUT  LEA     START_ADD_MSG,A1    load start address request msg
                 JSR     CK_INPUT_SIZE       check that input length is between 1-8 characters
                 CMP     #1,D3               is input length ok?    
                 BEQ     CONTINUE_START1     length ok ,keep on reading input 
-                JSR     INVALID_INP_ST       bad input length , display error and start over    
+                JSR     INVALID_INP_ST      bad input length , display error and start over    
 CONTINUE_START1 JSR     CONVERT             go to conversion subroutine
                 JSR     MIN_MAX_CHECK       check if input is within the min& max limit for address 
                 CMP.B   #1,D2               is input address within allowable interval
@@ -100,7 +100,7 @@ RD_END_INPUT    LEA     END_ADD_MSG,A1      load end address request msg
                 JSR     CK_INPUT_SIZE       check that input length is between 1-8 characters
                 CMP     #1,D3               is input length ok?    
                 BEQ     CONTINUE_END1       length ok ,keep on reading input 
-                JSR     INVALID_INP_ED
+                JSR     INVALID_INP_ED      
                 
 CONTINUE_END1   JSR     CONVERT             go to conversion subroutine
                 JSR     MIN_MAX_CHECK       check if input is within the min& max limit for address 
@@ -230,8 +230,8 @@ CNV_LOOP        CMP.B   #0,D1               are all characters of the input are 
                 CLR.L   D4                 use cleared d4 for input storage
                 MOVE.B  (A1)+,D4           save the first character input in to D4   
                 CMPI.B   #$39,D4           subtract $39 from character to check if its a digit                   
-                BLE     DIGIT_TO_HEX       use digit converter character is less than or equal to $39
-                BGT     ALPHA_TO_HEX
+                BLE     DIGIT_TO_HEX       use digit converter, character is less than or equal to $39
+                BGT     ALPHA_TO_HEX       use letter to hex converter, character is letter
 FINISH          RTS                
 *convert num to hex                
 ALPHA_TO_HEX    SUBI.B  #$37,D4            convert alpahbet to hex number, keep it in D4
@@ -269,7 +269,7 @@ BELOW_MIN_ERROR LEA     ADDR_BELOW_MSG,A1    load input address below min msg
 ABOVE_MAX_ERROR LEA     ADDR_ABOVE_MSG,A1    load input address above max msg 
                 MOVE    #14,D0               display the string at A1
                 TRAP    #15                  run task 14 
-                RTS         
+                RTS                          return
 *check if the input adress is even(odd not allowed)     
  
 EVEN_CHECK     MOVE.L   D6,D7
