@@ -71,7 +71,7 @@ RD_START_INPUT  LEA     START_ADD_MSG,A1    load start address request msg
                 MOVE.W  #14,D0              print data in d0 to screen 
                 TRAP    #15                 run task 14
                 
-                LEA     IN_START_A,A1     load starting adresss input from user 
+                LEA     IN_START_A,A1       load starting adresss input from user 
                 MOVE.B  #2,D0               read string from key board and store it in A1
                 TRAP    #15                 run task 2
                 JSR     CK_INPUT_SIZE       check that input length is between 1-8 characters
@@ -93,7 +93,7 @@ RD_END_INPUT    LEA     END_ADD_MSG,A1      load end address request msg
                 MOVE.W  #14,D0              display string at A1
                 TRAP    #15                 run task 14
                 
-                LEA     IN_END_A,A1     load starting adresss input from user 
+                LEA     IN_END_A,A1         load starting adresss input from user 
                 MOVE.B  #2,D0               read string from key board and store it in A1
                 TRAP    #15                 run task 2
                 
@@ -105,12 +105,12 @@ RD_END_INPUT    LEA     END_ADD_MSG,A1      load end address request msg
 CONTINUE_END1   JSR     CONVERT             go to conversion subroutine
                 JSR     MIN_MAX_CHECK       check if input is within the min& max limit for address 
                 CMP.B   #1,D2               is input address within allowable interval
-                BEQ     CONTINUE_END2     input is within limits, keep reading
+                BEQ     CONTINUE_END2       input is within limits, keep reading
                 BNE     RD_END_INPUT  
                 
 CONTINUE_END2   JSR     EVEN_CHECK          verify  input adress is even    
                 CMP.B   #1,D2               is input address even?
-                BNE     RD_END_INPUT      input not even , ask for input again
+                BNE     RD_END_INPUT        input not even , ask for input again
                 MOVEA.L  D6,A3              start adress passed all input tests,save start address in A2
                 MOVE.L  A2,IN_START_A       copy start input to IN_START_A
                 MOVE.L  A2,IN_CURR_A        copy current input to IN_CURR_A
@@ -123,78 +123,78 @@ CONTINUE_END2   JSR     EVEN_CHECK          verify  input adress is even
 
                 * it starts valid, so make IS_VALID 1
                 MOVE.B  #1,IS_VALID
-                
+ * checks if all addresses are decoded and ends the program if so.               
 MAIN_LOOP
-    JSR         CMD_IDENTIFY
-    MOVE.L      IN_CURR_A,D1
-    MOVE.L      IN_END_A,D2
-    CMP.W       D2,D1
-    BGT         END_MAIN_LOOP
-    BRA         MAIN_LOOP
+    JSR         CMD_IDENTIFY       go to command identifer subrotine 
+    MOVE.L      IN_CURR_A,D1       copy the address of the current op code to D1
+    MOVE.L      IN_END_A,D2        copy the last op code address to D2
+    CMP.W       D2,D1              check to see if current address is equal to end Address
+    BGT         END_MAIN_LOOP      we are done decoding addresses ,branch to end main loop subroutine 
+    BRA         MAIN_LOOP          we still got addresses to decode , keep decoding
 
 END_MAIN_LOOP
 
     * add a 00 to the very end of the output
-    MOVEA.L     OUT_CURR_A,A1
-    MOVE.B      #0,(A1)+
+    MOVEA.L     OUT_CURR_A,A1       copy the current output to A1
+    MOVE.B      #0,(A1)+            add 00 to the output and advance pointer 
 
     * --------------
     * printing loop
     * --------------
-    MOVEA.L     OUT_START_A,A1
-    MOVE.B      #0,D6   ; D6 is our counter
+    MOVEA.L     OUT_START_A,A1       copy start output to A1
+    MOVE.B      #0,D6                D6 is our counter
 
 FINAL_PRINT_LOOP
-    MOVE.B      (A1)+,D1    ; print a single character
+    MOVE.B      (A1)+,D1            print a single character
 
     * the user enters the newlines themself, so don't print them
-    CMP.B       #$D,D1
-    BEQ         FINAL_PRINT_LOOP_SKIP ; don't print it if it's a newline
-    CMP.B       #$A,D1
-    BEQ         FINAL_PRINT_LOOP_SKIP ; don't print it if it's a newline
+    CMP.B       #$D,D1                  check if we hit the carriage return 
+    BEQ         FINAL_PRINT_LOOP_SKIP   don't print it if it's a newline
+    CMP.B       #$A,D1                  check to see if its a line feed
+    BEQ         FINAL_PRINT_LOOP_SKIP   don't print it if it's a newline
 
-    MOVE.B      #6,D0
-    TRAP        #15
+    MOVE.B      #6,D0                   print single character in D1 
+    TRAP        #15                     excute trap task 6
 
 FINAL_PRINT_LOOP_SKIP
   
-    TST.B       D1
-    BEQ         FINAL_PRINT_LOOP_END
+    TST.B       D1                      is d1 zero?
+    BEQ         FINAL_PRINT_LOOP_END    its 0, go to final print subroutine
 
-    CMP.B       #$D,D1    ; if it's a LF, we hit a newline, wait for enter
-    BNE         FINAL_PRINT_LOOP
+    CMP.B       #$D,D1                  if it's a LF, we hit a newline, wait for enter
+    BNE         FINAL_PRINT_LOOP        not line feed, go to final print loop
 
-    ADDI.B      #1,D6     ; increment the counter
-    CMP.B       #INSTRUCTIONS_PER_SCREEN,D6
-    BEQ         FINAL_PRINT_LOOP_WAIT
+    ADDI.B      #1,D6                           increment the counter 
+    CMP.B       #INSTRUCTIONS_PER_SCREEN,D6     is the number of instruction per screen = d6
+    BEQ         FINAL_PRINT_LOOP_WAIT           wait for carriage return or enter 
 
 FINAL_PRINT_LOOP_NEWLINE
-    MOVE.B      #6,D0
-    MOVE.B      #$A,D1
-    TRAP        #15
-    MOVE.B      #$D,D1
-    TRAP        #15
+    MOVE.B      #6,D0                   copy 6 to D0 
+    MOVE.B      #$A,D1                  print carriage return 
+    TRAP        #15                     excute 
+    MOVE.B      #$D,D1                  print line feed 
+    TRAP        #15                     excute 
 
     BRA         FINAL_PRINT_LOOP
 
 FINAL_PRINT_LOOP_WAIT
-    CLR.B       D6         ; clear D6 for later use 
-    MOVE.B      #5,D0     ; get a single character from keyboard and store it in D1
-    TRAP        #15       ; run trap task #5
-    CMP.B       #$D,D1    ; and compare it with $D (carridge return or ENTER)
-    BNE         FINAL_PRINT_LOOP_WAIT ; if it's not that, wait again
+    CLR.B       D6                     clear D6 for later use 
+    MOVE.B      #5,D0                  get a single character from keyboard and store it in D1
+    TRAP        #15                    run trap task #5
+    CMP.B       #$D,D1                 and compare it with $D (carridge return or ENTER)
+    BNE         FINAL_PRINT_LOOP_WAIT  if it's not that, wait again
 
-    BRA         FINAL_PRINT_LOOP
+    BRA         FINAL_PRINT_LOOP       go to final print 
 
 FINAL_PRINT_LOOP_END
 
-    * MOVE.B    #13,D0  ; display string at A1 with CR,LF
-    * TRAP      #15     ; run task #13
+    * MOVE.B    #13,D0                 display string at A1 with CR,LF
+    * TRAP      #15                    run task #13
 
-    SIMHALT             ; halt simulator
+    SIMHALT                            halt simulator
 
 * this was bisrat's old loop
-* MAIN_LOOP       CMP.L   IN_CURR_A,IN_END_A     IS CURRENT LESS THAN END?               
+* MAIN_LOOP       CMP.L   IN_CURR_A,IN_END_A        IS CURRENT LESS THAN END?               
                 * BLE     IDINSRUCTION              go to idinstruction
                 * simHalt
 
@@ -204,14 +204,14 @@ FINAL_PRINT_LOOP_END
 
 CK_INPUT_SIZE   MOVE.L  #0,D2               set d2 to zero 
                 MOVE.L  #0,D3               set d3 to zero 
-                MOVE.L  #8,D4
-                CMP.W   D2,D1              IS string length zero?
+                MOVE.L  #8,D4               set d4 to 8
+                CMP.W   D2,D1               IS string length zero?
                 BEQ     INVALID_INP_ST      length is 0, print input error message 
-                CMP.B   D4,D1             compare string length to 8
-                BGT     INVALID_INP_ST       input greater than 8 chrs ,display error message
-                MOVE.B  #1,D3              save 1 in d3 meaning input size is ok 
-                *CLR.L   D1 
-                RTS
+                CMP.B   D4,D1               compare string length to 8
+                BGT     INVALID_INP_ST      input greater than 8 chrs ,display error message
+                MOVE.B  #1,D3               save 1 in d3 meaning input size is ok 
+                *CLR.L   D1                 clear d1 for later use 
+                RTS                         return to subroutine
  *print invalid input error message 
    
 INVALID_INP_ST  LEA     INPUT_ERROR_MSG,A1  load input error message to A1
@@ -222,10 +222,10 @@ INVALID_INP_ST  LEA     INPUT_ERROR_MSG,A1  load input error message to A1
 INVALID_INP_ED  LEA     INPUT_ERROR_MSG,A1  load input error message to A1
                 MOVE.W  #14,D0              print data in d0 to screen 
                 TRAP    #15                 run task 14
-                BRA     RD_END_INPUT      prompt user for input again
+                BRA     RD_END_INPUT        prompt user for input again
 *convert to ASCII
-CONVERT         CLR.L    D6
-CNV_LOOP        CMP.B   #0,D1              are all characters of the input are converted?
+CONVERT         CLR.L    D6                 clear the contents of D6 for later use
+CNV_LOOP        CMP.B   #0,D1               are all characters of the input are converted?
                 BEQ     FINISH 
                 CLR.L   D4                 use cleared d4 for input storage
                 MOVE.B  (A1)+,D4           save the first character input in to D4   
