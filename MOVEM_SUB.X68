@@ -73,10 +73,12 @@ MOVEM_DONE
         TST.B     D2
         BEQ       MOVEM_SIZE_W
         MOVE.B    #'L',(A3)+
+        MOVE.B    #2,SIZE_BUFFER
         BRA       MOVEM_DIRECTION
 
 MOVEM_SIZE_W
         MOVE.B    #'W',(A3)+
+        MOVE.B    #1,SIZE_BUFFER
 
 MOVEM_DIRECTION
         MOVE.B    #9,(A3)+
@@ -173,12 +175,13 @@ MOVEM_REG_TO_MEM_A_DONE
 
 
 MOVEM_MEM_TO_REG
+        MOVE.W    (A1)+,D4      ; D4 is the next word (which registers to move)
+        MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
+        MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer
+
         JSR   PRINT_SOURCE_SUB ; it's not technically the source, but it's in
                                ; it's place, so just roll with it
         MOVE.B    #',',(A3)+
-
-        MOVE.W    (A1)+,D4      ; D4 is the next word (which registers to move)
-        MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
 
 MOVEM_MEM_TO_REG_A_LOOP
         SUBI.B    #1,D5         ; pre-decrement our counter
