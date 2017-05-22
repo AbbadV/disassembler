@@ -357,6 +357,7 @@ SIZE_BUFFER          ds.b    1         allocate a byte for the current size of t
       
 
     INCLUDE 'CONSTANTS.X68'
+    INCLUDE 'OPCODE_TEST.X68'
 
         
 
@@ -364,3 +365,8 @@ SIZE_BUFFER          ds.b    1         allocate a byte for the current size of t
      
 
     END    START        ; last line of source
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~
