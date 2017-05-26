@@ -399,22 +399,29 @@ MAIN
     ROL.W    #$8,D1
     ROL.L    D7,D1
     
+ALMOSTTHEEND    NOP
     *Bcc
-    BCC     FARGONE
-    BLT     FARGONE
-    BGE     FARGONE
-    BRA     FARGONE
+    BCC     THEEND
+    BLT     THEEND
+    BGE     THEEND
+    BRA     THEEND
+    BCC     ALMOSTTHEEND
+    BLT     ALMOSTTHEEND
+    BGE     ALMOSTTHEEND
+    BRA     ALMOSTTHEEND
     
     *JSR
-    JSR     FARGONE
+    JSR     THEEND
+    JSR     ALMOSTTHEEND
     JSR     $A000
     JSR     $4000
     
     *RTS
-FARGONE    RTS
+THEEND    RTS
     
 
     
+
 
 
 
