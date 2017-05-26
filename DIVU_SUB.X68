@@ -23,11 +23,12 @@ DIVU_SUB
 
 DIVU_COPY
         TST.B     (A4)      ; test the contents of A4
-        BEQ       MULS_DONE  ; if we hit a 00, we're done copying
+        BEQ       MULS_DONE  ; if we hit a 00, we're done copying, go to MULS_DONE subroutine
 
         MOVE.B    (A4)+,(A3)+   ; copy A4 into A3, then increment both
         BRA       DIVU_COPY      ; do it again
         
+
 
 *~Font name~Courier New~
 *~Font size~10~

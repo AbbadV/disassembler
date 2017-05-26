@@ -29,21 +29,21 @@ MULS_COPY
         BRA       MULS_COPY      ; do it again
         
 MULS_DONE
-        MOVE.B  #9,(A3)+
-        MOVE.B  #1,SIZE_BUFFER
-        JSR PRINT_SOURCE_SUB
-        MOVE.B  #',',(A3)+
-        MOVE.B  #'D',(A3)+
-        AND.L   #$0E00,D1
-        LSR.L   #8,D1
-        LSR.L   #1,D1
+        MOVE.B  #9,(A3)+        ;add a tab
+        MOVE.B  #1,SIZE_BUFFER  ;update size buffer
+        JSR PRINT_SOURCE_SUB    ;get source
+        MOVE.B  #',',(A3)+      ;add ,
+        MOVE.B  #'D',(A3)+      ;add d
+        AND.L   #$0E00,D1       ;get the data register number
+        LSR.L   #8,D1           ;shift the data register value
+        LSR.L   #1,D1           
         
         MOVE.L    A3,OUT_CURR_A ; move the current A3 back to the output pointer
 
-        JSR PRINT_NUM
+        JSR PRINT_NUM           ;print the data register value
         
-        MOVE.B    #$0A,(A3)+
-        MOVE.B    #$0D,(A3)+
+        MOVE.B    #$0A,(A3)+    ;add cr
+        MOVE.B    #$0D,(A3)+    ;add lf
 
         MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer
         MOVE.L    A3,OUT_CURR_A ; move the current A3 back to the output pointer
@@ -52,6 +52,7 @@ MULS_DONE
         RTS       ; return
 
 *------------------------------------------------------------------------------
+
 
 
 *~Font name~Courier New~

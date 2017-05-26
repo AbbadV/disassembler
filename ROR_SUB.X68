@@ -29,13 +29,13 @@ ROR_COPY
         BRA       ROR_COPY      ; do it again
         
 ROR_DONE
-          MOVE.W    D1, D0
+          MOVE.W    D1, D0          ;check if command is mem shift
           ANDI.W    #$00C0,D0
           LSR.W     #6,D0
           
           *mem shift, get EA
           CMP.B     #3,D0
-          BEQ       ROR_EA
+          BEQ       ROR_EA          ;command is not a mem shift
 
           * we always print the period (2E in ASCII)
           MOVE.B    #$2E,(A3)+
@@ -52,34 +52,36 @@ ROR_PRINT_SIZE_END
           * print a tab and return
           MOVE.B    #9,(A3)+
           MOVE.W    D1, D0
-          ANDI.W    #$0020,D0
+          ANDI.W    #$0020,D0   ;check rotation
           LSR.W     #5,D0
           
           MOVE.W    D1,D7
           CMP.B #0,D0
-          BEQ   ROR_IMM
+          BEQ   ROR_IMM         ;rotation is an immediate
           
-          *DATA REGISTER
+          *SOURCE DATA REGISTER
    
           MOVE.B    #'D',(A3)+
-          AND.W #$0E00,D7
+          AND.W #$0E00,D7       ;get data register #
           LSR.W #8,D7
           LSR.W #1,D7
           ADD.B #$30,D7
-          MOVE.B    D7,(A3)+
+          MOVE.B    D7,(A3)+    ;put register # in output
           
-ROR_DEST          *GET DATA REGISTER
+ROR_DEST          *GET DESTINATION DATA REGISTER
           MOVE.B    #',',(A3)+
           MOVE.B    #'D',(A3)+
  
-          ANDI.W    #$0007,D1
+          ANDI.W    #$0007,D1   ;get data register #
+
 
           ADD.B     #$30,D1
-          MOVE.B    D1,(A3)+
+          MOVE.B    D1,(A3)+    ;put register # in output
+
           
 ROR_FIN          
-          MOVE.B    #$0A,(A3)+
-          MOVE.B    #$0D,(A3)+
+          MOVE.B    #$0A,(A3)+  ;add lf
+          MOVE.B    #$0D,(A3)+  ;add cr
  
         MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer
         MOVE.L    A3,OUT_CURR_A ; move the current A3 back to the output pointer
@@ -88,41 +90,42 @@ ROR_FIN
         RTS       ; return
 
 *------------------------------------------------------------------------------
-ROR_PRINT_SIZE_BYTE
-          MOVE.B    #$42,(A3)+
+ROR_PRINT_SIZE_BYTE 
+          MOVE.B    #$42,(A3)+  ;print B
           BRA       ROR_PRINT_SIZE_END
 
 ROR_PRINT_SIZE_WORD
-          MOVE.B    #$57,(A3)+
+          MOVE.B    #$57,(A3)+  ;print W
           BRA       ROR_PRINT_SIZE_END
 
 ROR_PRINT_SIZE_LONG
-          MOVE.B    #$4C,(A3)+
+          MOVE.B    #$4C,(A3)+  ;print L
           BRA       ROR_PRINT_SIZE_END
 ROR_IMM
     MOVE.B    #'#',(A3)+
-    AND.W #$0E00,D7
+    AND.W #$0E00,D7     ;get immediate value
     LSR.W #8,D7
     LSR.W #1,D7
 
-    TST.W D7
-    BEQ   ROR_EIGHT
+    TST.W D7            ;check D7 =0
+    BEQ   ROR_EIGHT     ;value should be 8
           
-    ADD.B #$30,D7
-    MOVE.B D7,(A3)+
+    ADD.B #$30,D7       ;convert to ascii
+    MOVE.B D7,(A3)+     ;print to output
 
-    BRA ROR_DEST
+    BRA ROR_DEST        ;get destination data register
 
 ROR_EIGHT
-    MOVE.B #'8',(A3)+
-    BRA    ROR_DEST
+    MOVE.B #'8',(A3)+   ;put 8 in output
+    BRA    ROR_DEST     ;get destination data register
 
 ROR_EA
-    MOVE.B    #$2E,(A3)+
-    MOVE.B    #$57,(A3)+
-    MOVE.B #$09,(A3)+
-    JSR PRINT_SOURCE_SUB
-    BRA ROR_FIN
+    MOVE.B    #$2E,(A3)+    ;print .
+    MOVE.B    #$57,(A3)+    ;print W
+    MOVE.B #$09,(A3)+       ;print tab
+    JSR PRINT_SOURCE_SUB    ;print source
+    BRA ROR_FIN             ;done decoding 
+
 
 
 

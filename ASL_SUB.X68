@@ -23,12 +23,13 @@ ASL_SUB
 
 ASL_COPY
         TST.B     (A4)      ; test the contents of A4
-        BEQ       ROR_DONE  ; if we hit a 00, we're done copying
+        BEQ       ROR_DONE  ; if we hit a 00, we're done copying, branch to ROR subroutine to decode
 
         MOVE.B    (A4)+,(A3)+   ; copy A4 into A3, then increment both
         BRA       ASL_COPY      ; do it again
         
       
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~
