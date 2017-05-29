@@ -1,35 +1,7 @@
 *------------------------------------------------------------------------------
-* This is a skeleton to help write all the _SUP files
-*
-* basically here's how they all work:
-*
-* IN_CURRENT_A contains the address of the current op-code we're looking at
-* and re-constructing into the command
-*
-* right after it are any immediate values and/or addresses in the command
-*
-* --------------------------------------------------------------------
-* YOU ARE RESPONSIBLE FOR MOVING IN_CURRENT_A OVER TO THE NEXT COMMAND
-* --------------------------------------------------------------------
-*
-* to output the text, push the characters onto the output stack with
-*
-*   MOVE.B  $__,(A3)+
+* ADDI_SUB
 * 
-* also, replace ADD with the name of the command, all variables and labels are
-* global in assembly, so each one has to be 100% unique
-*
-* things like
-*
-*     void func()
-*     {
-*       int NAME = 5;
-*     }
-*
-*     int NAME = 2;
-*     func();
-*
-* don't work here
+* this is the subroutine for processing the ADDI command
 *------------------------------------------------------------------------------
 
 ADDI_SUB
@@ -63,15 +35,24 @@ ADDI_COPY
         BRA       ADDI_COPY      ; do it again
         
 ADDI_DONE
-  
+        * isolate the size and direction we're working with here
+
+        * I didn't notice until now that of the 3 bites, the first one is the
+        * direction and the last 2 are the size, so this code is more 
+        * complicated than it needs to be, the manual made it look line one
+        * single 3-bit blob
+
+        * but it works, and it's due in less than a week, so I'm not going to
+        * risk fixing it and breaking the program
+
         * D4 = size       ( 0 = B, 1 = W, 2 = L)
         * D5 = direction  ( 0 = Dn first, 1 = <ea> first)
 
-        MOVE.W    D1,D2
-        LSR.W     #6,D2
+        MOVE.W    D1,D2   ; isolate the bits for direction/size
+        LSR.W     #6,D2   ; they're merged into a single blob for some reason
         ANDI.W    #7,D2
 
-        CMP.W     #0,D2
+        CMP.W     #0,D2         ; break to the appropriate size-direction pair
         BEQ       ADDI_BYTE_DN
         CMP.W     #1,D2
         BEQ       ADDI_WORD_DN
@@ -88,7 +69,7 @@ ADDI_DONE
         * if nothing is found just jump to the end
         BRA       ADDI_PARAM_DONE
 
-ADDI_BYTE_DN
+ADDI_BYTE_DN              ; figure out the data in the
         MOVE.B    #0,D4
         MOVE.B    #0,D5
         BRA       ADDI_PARAM_DONE
@@ -124,29 +105,29 @@ ADDI_PARAM_DONE
         * print the size
         * -------------------
 
-        MOVE.B    #'.',(A3)+
-        CMP.B     #0,D4
+        MOVE.B    #'.',(A3)+            ; print the period right before the size
+        CMP.B     #0,D4                 ; print the correct size
         BEQ       ADDI_PRINT_SIZE_BYTE
         CMP.B     #1,D4
         BEQ       ADDI_PRINT_SIZE_WORD
         CMP.B     #2,D4
         BEQ       ADDI_PRINT_SIZE_LONG
 
-        BRA       ADDI_PRINT_SIZE_DONE
+        BRA       ADDI_PRINT_SIZE_DONE  ; if there's an invalid size just stop
 
 ADDI_PRINT_SIZE_BYTE
-        MOVE.B    #'B',(A3)+
+        MOVE.B    #'B',(A3)+            ; print a B for byte
         BRA       ADDI_PRINT_SIZE_DONE
 ADDI_PRINT_SIZE_WORD
-        MOVE.B    #'W',(A3)+
+        MOVE.B    #'W',(A3)+            ; print a W
         BRA       ADDI_PRINT_SIZE_DONE
 ADDI_PRINT_SIZE_LONG
-        MOVE.B    #'L',(A3)+
+        MOVE.B    #'L',(A3)+            ; print an L (a L?, English is odd)
         BRA       ADDI_PRINT_SIZE_DONE
 
 ADDI_PRINT_SIZE_DONE
-        MOVE.B    #9,(A3)+
-        MOVE.B    #'#',(A3)+
+        MOVE.B    #9,(A3)+              ; the source is an immediate value
+        MOVE.B    #'#',(A3)+            ; so print a tab, than a #$
         MOVE.B    #'$',(A3)+
 
         * --------------------
@@ -158,18 +139,18 @@ ADDI_PRINT_SIZE_DONE
         BRA       ADDI_PRINT_ADDR_DONE
 
 ADDI_PRINT_AL
-        JSR       ADDI_PRINT_ADDR_LONG
+        JSR       ADDI_PRINT_ADDR_LONG  ; get and print the next 
+                                        ; long in the data
 
 ADDI_PRINT_ADDR_DONE
 
-        MOVE.B    #',',(A3)+
+        MOVE.B    #',',(A3)+            ; print the comma between arguments
 
-        * JSR       ADDI_EA_TO_DN
         JSR       PRINT_SOURCE_SUB    ; the "source" is actually the source here
 
 ADDI_END
 
-        MOVE.B    #$0A,(A3)+
+        MOVE.B    #$0A,(A3)+    ; print a newline
         MOVE.B    #$0D,(A3)+
 
         MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer
@@ -179,11 +160,21 @@ ADDI_END
         RTS       ; return
 
 *------------------------------------------------------------------------------
+
+*------------------------------------------------------------------------------
+* ADDI_EA_TO_DN
+*
+* print the arguments if we're moving data from an effective address to a
+* data register
+*
+* this subroutine is no longer used as far as I can tell, but I'm too scared
+* actually change any code this late in the project, so I'm leaving it in
+*------------------------------------------------------------------------------
 ADDI_EA_TO_DN
 
         JSR       PRINT_SOURCE_SUB    ; the "source" is actually the source here
-        MOVE.B    #',',(A3)+
-        MOVE.B    #'D',(A3)+
+        MOVE.B    #',',(A3)+          ; the destination is always a D
+        MOVE.B    #'D',(A3)+          ; so print the comma and
         MOVE.W    D1,D2
         LSR.W     #8,D2
         LSR.W     #1,D2
@@ -194,24 +185,31 @@ ADDI_EA_TO_DN
         RTS
 
 *------------------------------------------------------------------------------
-ADDI_PRINT_ADDR_WORD
-        MOVEM.L   D1,-(SP) ; move the old registers onto the stack
 
-        CLR.L     D1
+*------------------------------------------------------------------------------
+* ADDI_PRINT_ADDR_WORD
+*
+* 
+*------------------------------------------------------------------------------
+ADDI_PRINT_ADDR_WORD
+        MOVEM.L   D1,-(SP) ; move the old D1 onto the stack
+
+        CLR.L     D1            ; clear D1 (we'll fix it later)
         MOVE.W    (A1)+,D1      ; move the next word into D1
         MOVE.L    A3,OUT_CURR_A ; update the output pos before we print
         JSR       PRINT_NUM     ; print the number in D1
 
-        MOVEM.L   (SP)+,D1 ; move the old registers back to the stack
+        MOVEM.L   (SP)+,D1 ; move the old D1 back to the stack
         RTS
 *------------------------------------------------------------------------------
 ADDI_PRINT_ADDR_LONG
-        MOVEM.L   D1,-(SP) ; move the old registers onto the stack
+        MOVEM.L   D1,-(SP) ; move the old D1 onto the stack
 
-        CLR.L     D1
+        CLR.L     D1            ; clear D1 (we'll fix it later)
+        MOVE.W    (A1)+,D1      ; move the next word into D1
         MOVE.L    (A1)+,D1      ; move the next word into D1
         MOVE.L    A3,OUT_CURR_A ; update the output pos before we print
         JSR       PRINT_NUM     ; print the number in D1
 
-        MOVEM.L   (SP)+,D1 ; move the old registers back to the stack
+        MOVEM.L   (SP)+,D1 ; move the old D1 back to the stack
         RTS

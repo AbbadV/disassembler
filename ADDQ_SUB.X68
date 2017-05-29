@@ -1,35 +1,12 @@
 *------------------------------------------------------------------------------
-* This is a skeleton to help write all the _SUP files
+* ADDQ_SUB
 *
-* basically here's how they all work:
+* this is responsible for disassembling and printing a single ADDQ command
 *
-* IN_CURRENT_A contains the address of the current op-code we're looking at
-* and re-constructing into the command
+* the 68K assembler (or at least the one we've been using in class) will
+* automatically convert ADD commands to ADDQ if it can, so sometimes ADD
+* commands will turn into ADDQ.
 *
-* right after it are any immediate values and/or addresses in the command
-*
-* --------------------------------------------------------------------
-* YOU ARE RESPONSIBLE FOR MOVING IN_CURRENT_A OVER TO THE NEXT COMMAND
-* --------------------------------------------------------------------
-*
-* to output the text, push the characters onto the output stack with
-*
-*   MOVE.B  $__,(A3)+
-* 
-* also, replace ADD with the name of the command, all variables and labels are
-* global in assembly, so each one has to be 100% unique
-*
-* things like
-*
-*     void func()
-*     {
-*       int NAME = 5;
-*     }
-*
-*     int NAME = 2;
-*     func();
-*
-* don't work here
 *------------------------------------------------------------------------------
 
 ADDQ_SUB
@@ -145,17 +122,17 @@ ADDQ_PRINT_SIZE_LONG
         BRA       ADDQ_PRINT_SIZE_DONE
 
 ADDQ_PRINT_SIZE_DONE
-        MOVE.B    #9,(A3)+
-        MOVE.B    #'#',(A3)+
+        MOVE.B    #9,(A3)+            ; the source is always an immediate value
+        MOVE.B    #'#',(A3)+          ; so print a tab, than a #$
         MOVE.B    #'$',(A3)+
 
-        JSR       ADDQ_PRINT_NUM
-        MOVE.B    #',',(A3)+
-        JSR       PRINT_SOURCE_SUB    ; the "source" is actually the source here
+        JSR       ADDQ_PRINT_NUM      ; print the number
+        MOVE.B    #',',(A3)+          ; print the comma
+        JSR       PRINT_SOURCE_SUB    ; the "source" is the destination here
 
 ADDQ_END
 
-        MOVE.B    #$0A,(A3)+
+        MOVE.B    #$0A,(A3)+    ; print a newline
         MOVE.B    #$0D,(A3)+
 
         MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer
@@ -165,6 +142,12 @@ ADDQ_END
         RTS       ; return
 
 *------------------------------------------------------------------------------
+
+*------------------------------------------------------------------------------
+* ADDQ_PRINT_NUM
+*
+* isolate and print the number we're adding somewhere
+*------------------------------------------------------------------------------
 ADDQ_PRINT_NUM
         MOVEM.L   D1,-(SP) ; move the old registers onto the stack
 
@@ -172,15 +155,17 @@ ADDQ_PRINT_NUM
         LSR.W     #1,D1
         AND.L     #7,D1   ; isolate the number part of the opcode
 
-        TST.W     D1
-        BNE       ADDQ_ZERO_IS_EIGHT
+        TST.W     D1      ; if the number is 0, print an 8 and not a 0
+        BNE       ADDQ_ZERO_IS_EIGHT  ; otherwise we skip the next line
 
+        * probably skip this line
         MOVE.B    #8,D1
+        * it's usually not 8 (87.5% of the time)
 
 ADDQ_ZERO_IS_EIGHT
 
         MOVE.L    A3,OUT_CURR_A ; update the output pos before we print
-        JSR       PRINT_NUM     ; print the number in D1
+        JSR       PRINT_NUM     ; print the number in D1 (the number)
 
         MOVEM.L   (SP)+,D1 ; move the old registers back to the stack
         RTS

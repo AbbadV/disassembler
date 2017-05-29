@@ -1,35 +1,7 @@
 *------------------------------------------------------------------------------
-* This is a skeleton to help write all the _SUP files
-*
-* basically here's how they all work:
-*
-* IN_CURRENT_A contains the address of the current op-code we're looking at
-* and re-constructing into the command
-*
-* right after it are any immediate values and/or addresses in the command
-*
-* --------------------------------------------------------------------
-* YOU ARE RESPONSIBLE FOR MOVING IN_CURRENT_A OVER TO THE NEXT COMMAND
-* --------------------------------------------------------------------
-*
-* to output the text, push the characters onto the output stack with
-*
-*   MOVE.B  $__,(A3)+
+* ADDA_SUB
 * 
-* also, replace ADD with the name of the command, all variables and labels are
-* global in assembly, so each one has to be 100% unique
-*
-* things like
-*
-*     void func()
-*     {
-*       int NAME = 5;
-*     }
-*
-*     int NAME = 2;
-*     func();
-*
-* don't work here
+* this is the subroutine for processing the ADDA command
 *------------------------------------------------------------------------------
 
 ADDA_SUB
@@ -56,38 +28,42 @@ ADDA_SUB
         * in ADDA_STR
 
 ADDA_COPY
-        TST.B     (A4)      ; test the contents of A4
-        BEQ       ADDA_AONE  ; if we hit a 00, we're done copying
+        TST.B     (A4)            ; test the contents of A4
+        BEQ       ADDA_DONE       ; if we hit a 00, we're done copying
 
-        MOVE.B    (A4)+,(A3)+   ; copy A4 into A3, then increment both
-        BRA       ADDA_COPY      ; do it again
+        MOVE.B    (A4)+,(A3)+     ; copy A4 into A3, then increment both
+        BRA       ADDA_COPY       ; do it again
         
-ADDA_AONE
+ADDA_DONE
+    
+        * print the size
   
-        MOVE.B    #'.',(A3)+
+        MOVE.B    #'.',(A3)+      ; print the period between the command
+                                  ; and the size
 
-        MOVE.W    D1,D2
+        MOVE.W    D1,D2           ; isolate the bit that has the size
         LSR.W     #8,D2
         ANDI.W    #1,D2
 
-        TST       D2
+        TST       D2              ; if that bit's 0, it's a word, otherwise
         BEQ       ADDA_WORD_AN
-        BRA       ADDA_LONG_AN
+        BRA       ADDA_LONG_AN    ; it's a long
 
 ADDA_WORD_AN
-        MOVE.B    #1,SIZE_BUFFER
-        MOVE.B    #'W',(A3)+
+        MOVE.B    #1,SIZE_BUFFER  ; PRINT_SOURCE_SUB needs to know the size
+        MOVE.B    #'W',(A3)+      ; print the W
         BRA       ADDA_PRINT_SIZE_DONE
 
 ADDA_LONG_AN
-        MOVE.B    #2,SIZE_BUFFER
-        MOVE.B    #'L',(A3)+
+        MOVE.B    #2,SIZE_BUFFER  ; PRINT_SOURCE_SUB needs to know the size
+        MOVE.B    #'L',(A3)+      ; print the L
         BRA       ADDA_PRINT_SIZE_DONE
 
 ADDA_PRINT_SIZE_DONE
-        MOVE.B    #9,(A3)+
+        MOVE.B    #9,(A3)+        ; print a tab between the command and its
+                                  ; arguments
 
-        JSR       ADDA_EA_TO_AN
+        JSR       ADDA_EA_TO_AN   ; print the arguments
 
 ADDA_END
 
@@ -101,16 +77,30 @@ ADDA_END
         RTS       ; return
 
 *------------------------------------------------------------------------------
+
+*------------------------------------------------------------------------------
+* ADDA_EA_TO_AN
+*
+* we're moving something else to an an address register, so print that
+*
+* This subroutine exists because we wrote ADD_SUB first, which can do either
+* effective address to data register (EA_TO_DN) or vice versa (DN_TO_EA)
+*
+* once that worked, we just modified it to make ADDA_SUB, so there's still a
+* subroutine even though there's not really a decision to make
+* 
+*------------------------------------------------------------------------------
+
 ADDA_EA_TO_AN
 
         JSR       PRINT_SOURCE_SUB    ; the "source" is actually the source here
-        MOVE.B    #',',(A3)+
-        MOVE.B    #'A',(A3)+
-        MOVE.W    D1,D2
-        LSR.W     #8,D2
+        MOVE.B    #',',(A3)+          ; ptint the comma and the A
+        MOVE.B    #'A',(A3)+          ; since the destination is always an An
+        MOVE.W    D1,D2               ; copy the opcode
+        LSR.W     #8,D2               
         LSR.W     #1,D2
-        ANDI.W    #7,D2
-        ADDI.W    #$30,D2
-        MOVE.B    D2,(A3)+
+        ANDI.W    #7,D2               ; isolate the bits for the dest number
+        ADDI.W    #'0',D2             ; add '0' to get the ascii for the number
+        MOVE.B    D2,(A3)+            ; print it
 
         RTS
