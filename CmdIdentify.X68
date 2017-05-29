@@ -33,7 +33,7 @@ CMD_IDENTIFY
         
             * ADD_P,    the (P)art of the opcode that is constant for every
             *           possible ADD command    ( the constant bits are 1)
-                        basically the important bits of the opcode
+            *           basically the important bits of the opcode
 
             * ADD_S,    the (S)ignature, what the important bits actually are
 

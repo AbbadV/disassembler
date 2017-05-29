@@ -117,12 +117,15 @@ ADDI_PARAM_DONE
 
 ADDI_PRINT_SIZE_BYTE
         MOVE.B    #'B',(A3)+            ; print a B for byte
+        MOVE.B    #0,SIZE_BUFFER
         BRA       ADDI_PRINT_SIZE_DONE
 ADDI_PRINT_SIZE_WORD
         MOVE.B    #'W',(A3)+            ; print a W
+        MOVE.B    #1,SIZE_BUFFER
         BRA       ADDI_PRINT_SIZE_DONE
 ADDI_PRINT_SIZE_LONG
         MOVE.B    #'L',(A3)+            ; print an L (a L?, English is odd)
+        MOVE.B    #2,SIZE_BUFFER
         BRA       ADDI_PRINT_SIZE_DONE
 
 ADDI_PRINT_SIZE_DONE
@@ -206,7 +209,7 @@ ADDI_PRINT_ADDR_LONG
         MOVEM.L   D1,-(SP) ; move the old D1 onto the stack
 
         CLR.L     D1            ; clear D1 (we'll fix it later)
-        MOVE.W    (A1)+,D1      ; move the next word into D1
+      * MOVE.W    (A1)+,D1      ; move the next word into D1
         MOVE.L    (A1)+,D1      ; move the next word into D1
         MOVE.L    A3,OUT_CURR_A ; update the output pos before we print
         JSR       PRINT_NUM     ; print the number in D1

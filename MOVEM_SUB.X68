@@ -124,8 +124,6 @@ MOVEM_REG_TO_MEM_D_DONE
         * loop through the A registers
         * ----------------------------
 
-MOVEM_REG_TO_MEM_D_LOOP
-
         MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
 
 MOVEM_REG_TO_MEM_A_LOOP
