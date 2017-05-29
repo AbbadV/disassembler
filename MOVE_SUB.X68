@@ -1,35 +1,7 @@
 *------------------------------------------------------------------------------
-* This is a skeleton to help write all the _SUP files
+* MOVE_SUB
 *
-* basically here's how they all work:
-*
-* IN_CURRENT_A contains the address of the current op-code we're looking at
-* and re-constructing into the command
-*
-* right after it are any immediate values and/or addresses in the command
-*
-* --------------------------------------------------------------------
-* YOU ARE RESPONSIBLE FOR MOVING IN_CURRENT_A OVER TO THE NEXT COMMAND
-* --------------------------------------------------------------------
-*
-* to output the text, push the characters onto the output stack with
-*
-*   MOVE.B  $__,(A3)+
-* 
-* also, replace MOVE with the name of the command, all variables and labels are
-* global in assembly, so each one has to be 100% unique
-*
-* things like
-*
-*     void func()
-*     {
-*       int NAME = 5;
-*     }
-*
-*     int NAME = 2;
-*     func();
-*
-* don't work here
+* disassembles and prints a single MOVE command
 *------------------------------------------------------------------------------
 
 MOVE_SUB
@@ -45,7 +17,7 @@ MOVE_SUB
         *
         MOVEA.L   #0,A1             ; load the current opcode into a register
         MOVEA.L   IN_CURR_A,A1
-        MOVE.W    (A1)+,D1          ; not necessary here, but for other cmds
+        MOVE.W    (A1)+,D1
 
         MOVEA.L   #0,A3
         MOVEA.L   OUT_CURR_A,A3 ; move the current output pointer to A3
@@ -56,19 +28,20 @@ MOVE_SUB
         * in MOVE_STR
 
 MOVE_COPY
-        TST.B     (A4)      ; test the contents of A4
+        TST.B     (A4)       ; test the contents of A4
         BEQ       MOVE_DONE  ; if we hit a 00, we're done copying
 
         MOVE.B    (A4)+,(A3)+   ; copy A4 into A3, then increment both
-        BRA       MOVE_COPY      ; do it again
+        BRA       MOVE_COPY     ; do it again
         
 MOVE_DONE
-
-        JSR       PRINT_SIZE_EARLY_SUB
-        JSR       PRINT_SOURCE_SUB
-        MOVE.B    #',',(A3)+
-        JSR       PRINT_DEST_SUB
-        MOVE.B    #$0A,(A3)+
+        JSR       PRINT_SIZE_EARLY_SUB  ; the size is early in this command
+                                        ; so call this one (this includes
+                                        ; the tab after it)
+        JSR       PRINT_SOURCE_SUB      ; print the source
+        MOVE.B    #',',(A3)+            ; print the comma between them
+        JSR       PRINT_DEST_SUB        ; print the destination
+        MOVE.B    #$0A,(A3)+            ; print a newline
         MOVE.B    #$0D,(A3)+
 
         MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer

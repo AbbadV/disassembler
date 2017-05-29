@@ -1,3 +1,18 @@
+* -----------------------------------------------------------------------------
+* PRINT_DEST_SUB
+*
+* prints the dest (the register, immediate value or memory location)
+* which is stored here
+*
+*               0 1 0 1   0 1 0 1   0 1 0 1   0 1 0 1
+*                         [   dest    ]
+*
+* this is very similar to PRINT_SOURCE_SUB, the only difference is where
+* the memory bits come from
+*
+* so look there for more detailed comments
+* -----------------------------------------------------------------------------
+
 PRINT_DEST_SUB
 
           * we want to modify A3 (it's like a pass-by-reference parameter)

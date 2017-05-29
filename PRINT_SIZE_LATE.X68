@@ -1,9 +1,20 @@
-* ----------------------------------
-* THIS CHANGES D2 TO STORE THE SIZE
+* ------------------------------------------------------------------------------
+* PRINT_SIZE_LATE_SUB
+*
+* prints the size of the command, for commands that store the size here:
+*
+*           0 1 0 1   0 1 0 1   0 1 0 1   0 1 0 1
+*                               --- 
+*
+* also updates the SIZE_BUFFER, because PRINT_SOURCE and PRINT_DEST need that
+* ------------------------------------------------------------------------------
+
+* ------------------------------------------
+* THIS CHANGES SIZE_BUFFER TO STORE THE SIZE
 * 0 = Byte
 * 1 = Word
 * 2 = Long
-* ----------------------------------
+* ------------------------------------------
 
 PRINT_SIZE_LATE_SUB
 
@@ -16,8 +27,8 @@ PRINT_SIZE_LATE_SUB
           LSR.W     #6,D1
           ANDI.W    #$3,D1
 
-          * we always print the period (2E in ASCII)
-          MOVE.B    #$2E,(A3)+
+          * we always print the period
+          MOVE.B    #'.',(A3)+
 
           * switch to the correct subroutine
           CMP.B     #0,D1

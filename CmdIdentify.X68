@@ -10,7 +10,7 @@
 * and determines which command it corresponds to
 *
 * then it runs that command's subroutine, which writes prints the dissassembled
-* code onto the screen increments IN_CURR_A
+* code onto the screen, then increments IN_CURR_A
 * -----------------------------------------------------------------------------
 
 CMD_IDENTIFY
@@ -26,6 +26,42 @@ CMD_IDENTIFY
         MOVE.B    #9,(A3)+      ; print tab character
         MOVE.L    A3,OUT_CURR_A
         MOVE.W    (A1),D1       ; D1 is the current opcode
+
+        
+        * the system we use is that each command has 2 constants associated 
+        * with it
+        
+            * ADD_P,    the (P)art of the opcode that is constant for every
+            *           possible ADD command    ( the constant bits are 1)
+            *           basically the important bits of the opcode
+
+            * ADD_S,    the (S)ignature, what the important bits actually are
+
+        * so to determine what command an opcode is, first we AND it with
+        * the part to get rid of any unimportant bits, then check if it
+        * matches the signature
+
+        * for example, MOVE_P = $C000, and MOVE_S = $0000, so in order to
+        * check the opcode $349A to see if it's a MOVE, here's what we do:
+
+        * and it with MOVE_P
+
+        *   (349A)    0 0 1 1   0 1 0 0   1 0 0 1   1 0 1 0
+        *   (C000)    1 1 0 0   0 0 0 0   0 0 0 0   0 0 0 0
+
+        *             0 0 0 0   0 0 0 0   0 0 0 0   0 0 0 0
+
+        * and check to see if it matches the signature, in this case it does
+        * so it's a valid MOVE command
+
+        *             0 0 0 0   0 0 0 0   0 0 0 0   0 0 0 0
+        *   MOVE_S    0 0 0 0   0 0 0 0   0 0 0 0   0 0 0 0
+
+
+        * we have to check for commands in a specific order, because all MOVE
+        * commands are also valid MOVEA commands, but not the other way around.
+        * so we have to check for MOVEA first.
+
 
         * check ASL (memory signature)
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
@@ -152,15 +188,15 @@ CMD_IDENTIFY
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
-        
-         * check LEA
+
+        * check LEA
         MOVE.W    D1,D2         ; move the value into D2 for temp storage
         MOVE.W    #LEA_P,D3    ; move values into registers for CMD_CHECK
         MOVE.W    #LEA_S,D4  
         MOVE.W    #LEA_SUB,D5
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal       
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal 
 
         * check ADDQ
         MOVE.W    D1,D2         ; move the value into D2 for temp storage
@@ -278,59 +314,15 @@ CMD_IDENTIFY
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
-        * check ASRM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ASRM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #ASRM_S,D4  
-        MOVE.W    #ASR_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal        
 
-        * check ASLM
+        * check ASL
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ASLM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #ASLM_S,D4  
+        MOVE.W    #ASL_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ASL_S,D4  
         MOVE.W    #ASL_SUB,D5
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal  
-        
-        * check LSLM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #LSLM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #LSLM_S,D4  
-        MOVE.W    #LSL_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
-        
-        * check LSRM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #LSRM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #LSRM_S,D4  
-        MOVE.W    #LSR_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-
-        * check RORM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #RORM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #RORM_S,D4  
-        MOVE.W    #ROR_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-        
-        * check ROLM
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ROLM_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #ROLM_S,D4  
-        MOVE.W    #ROL_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal  
 
         * check ASR
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
@@ -341,15 +333,6 @@ CMD_IDENTIFY
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
-        * check ASL
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ASL_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #ASL_S,D4  
-        MOVE.W    #ASL_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal
-       
         * check LSL
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
         MOVE.W    #LSL_P,D3    ; move values into registers for CMD_CHECK
@@ -367,15 +350,6 @@ CMD_IDENTIFY
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
-        
-        * check ROR
-        MOVE.W    D1,D2        ; move the value into D2 for temp storage
-        MOVE.W    #ROR_P,D3    ; move values into registers for CMD_CHECK
-        MOVE.W    #ROR_S,D4  
-        MOVE.W    #ROR_SUB,D5
-        JSR       CMD_CHECK
-        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal 
 
         * check ROL
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
@@ -384,8 +358,16 @@ CMD_IDENTIFY
         MOVE.W    #ROL_SUB,D5
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal     
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
+        * check ROR
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #ROR_P,D3    ; move values into registers for CMD_CHECK
+        MOVE.W    #ROR_S,D4  
+        MOVE.W    #ROR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
 
 
         * if we hit here it's not a valid command
@@ -417,6 +399,10 @@ NEGATIVE
         RTS
 
 * ------------------------------------------------------------------------------
+
+* incluuuuuuuudes
+*
+* these need to be all at the same place
 
         INCLUDE 'PRINT_SIZE_EARLY.X68'
         INCLUDE 'PRINT_SIZE_LATE.X68'
@@ -454,13 +440,8 @@ NEGATIVE
         INCLUDE 'ROL_SUB.X68'
         INCLUDE 'ROR_SUB.X68'
 
-* BAD_COMMAND_STR DC.B  'DATA $',0
-
-* NOP_STR DC.B  'NOP',$0A,$0D,0
-* NOP_S   EQU   $4E70
-* NOP_P   EQU   $FFFF
-
 * ------------------------------------------------------------------------------
+
 
 *~Font name~Courier New~
 *~Font size~10~

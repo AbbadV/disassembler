@@ -1,35 +1,7 @@
 *------------------------------------------------------------------------------
-* This is a skeleton to help write all the _SUP files
+* MOVEM_SUB
 *
-* basically here's how they all work:
-*
-* IN_CURRENT_A contains the address of the current op-code we're looking at
-* and re-constructing into the command
-*
-* right after it are any immediate values and/or addresses in the command
-*
-* --------------------------------------------------------------------
-* YOU ARE RESPONSIBLE FOR MOVING IN_CURRENT_A OVER TO THE NEXT COMMAND
-* --------------------------------------------------------------------
-*
-* to output the text, push the characters onto the output stack with
-*
-*   MOVE.B  $__,(A3)+
-* 
-* also, replace MOVE with the name of the command, all variables and labels are
-* global in assembly, so each one has to be 100% unique
-*
-* things like
-*
-*     void func()
-*     {
-*       int NAME = 5;
-*     }
-*
-*     int NAME = 2;
-*     func();
-*
-* don't work here
+* disassembles and prints a single MOVEM command
 *------------------------------------------------------------------------------
 
 MOVEM_SUB
@@ -45,10 +17,10 @@ MOVEM_SUB
         *
         MOVEA.L   #0,A1             ; load the current opcode into a register
         MOVEA.L   IN_CURR_A,A1
-        MOVE.W    (A1)+,D1          ; not necessary here, but for other cmds
+        MOVE.W    (A1)+,D1
 
         MOVEA.L   #0,A3
-        MOVEA.L   OUT_CURR_A,A3 ; move the current output pointer to A3
+        MOVEA.L   OUT_CURR_A,A3    ; move the current output pointer to A3
         LEA       MOVEM_STR,A4     ; move the to-be-printed string to A4
 
         * we need to append the string at MOVEM_STR to the output string
@@ -56,39 +28,39 @@ MOVEM_SUB
         * in MOVEM_STR
 
 MOVEM_COPY
-        TST.B     (A4)      ; test the contents of A4
+        TST.B     (A4)        ; test the contents of A4
         BEQ       MOVEM_DONE  ; if we hit a 00, we're done copying
 
         MOVE.B    (A4)+,(A3)+   ; copy A4 into A3, then increment both
-        BRA       MOVEM_COPY      ; do it again
+        BRA       MOVEM_COPY    ; do it again
         
 MOVEM_DONE
 
         * print the size (determined by this bit 0000 0000 0100 0000)
         *                ( 0 = word, 1 = long)
-        MOVE.B    #'.',(A3)+
-        MOVE.B    D1,D2
+        MOVE.B    #'.',(A3)+        ; print the period
+        MOVE.B    D1,D2             ; make a copy of the opcode
         ANDI.B    #$40,D2
         LSR.B     #6,D2
-        TST.B     D2
-        BEQ       MOVEM_SIZE_W
-        MOVE.B    #'L',(A3)+
-        MOVE.B    #2,SIZE_BUFFER
-        BRA       MOVEM_DIRECTION
+        TST.B     D2                ; if the important bit's 0 (W)
+        BEQ       MOVEM_SIZE_W      ; print a W
+        MOVE.B    #'L',(A3)+        ; othereise, print a L
+        MOVE.B    #2,SIZE_BUFFER    ; either way, update SIZE_BUFFER
+        BRA       MOVEM_DIRECTION   ; PRINT_SOURCE needs it
 
 MOVEM_SIZE_W
         MOVE.B    #'W',(A3)+
         MOVE.B    #1,SIZE_BUFFER
 
 MOVEM_DIRECTION
-        MOVE.B    #9,(A3)+
+        MOVE.B    #9,(A3)+          ; print the tab
 
-        MOVE.W    D1,D2
-        ANDI.W    #$400,D2
-        LSR.W     #8,D2
+        MOVE.W    D1,D2             ; make a copy of the opcode
+        ANDI.W    #$400,D2          ; isolate the bit that tells us what
+        LSR.W     #8,D2             ; direction we're goint
         LSR.W     #2,D2
         TST.B     D2
-        BEQ       MOVEM_RTM
+        BEQ       MOVEM_RTM         ; if it's 0, move from registers to memory
         JSR       MOVEM_MEM_TO_REG
         BRA       MOVEM_END
         
@@ -110,9 +82,19 @@ MOVEM_END
 
 *------------------------------------------------------------------------------
 
+*------------------------------------------------------------------------------
+* MOVEM_REG_TO_MEM
+*
+* print the arguments if we're moving from registers to memory
+*------------------------------------------------------------------------------
+
 MOVEM_REG_TO_MEM
         MOVE.W    (A1)+,D4      ; D4 is the next word (which registers to move)
         MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
+
+        * ----------------------------
+        * loop through the D registers
+        * ----------------------------
 
 MOVEM_REG_TO_MEM_D_LOOP
         SUBI.B    #1,D5         ; pre-decrement our counter
@@ -132,13 +114,17 @@ MOVEM_REG_TO_MEM_D_LOOP
         MOVE.B    #'/',(A3)+
 
 MOVEM_REG_TO_MEM_D_SKIP
-        TST.B     D5
+        TST.B     D5            ; if out counter's 0, exit the loop
         BEQ       MOVEM_REG_TO_MEM_D_DONE
         BRA       MOVEM_REG_TO_MEM_D_LOOP
 
 MOVEM_REG_TO_MEM_D_DONE
-
         MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
+        
+        
+        * ----------------------------
+        * loop through the A registers
+        * ----------------------------
 
 MOVEM_REG_TO_MEM_A_LOOP
         SUBI.B    #1,D5         ; pre-decrement our counter
@@ -165,12 +151,18 @@ MOVEM_REG_TO_MEM_A_DONE
 
         * we just printed the list of D0-D7/A0-A7, now we print the register
         MOVE.B    #',',-(A3)    ; overwrite the last /
-        MOVE.B    #',',(A3)+
+        MOVE.B    #',',(A3)+    ; put A3 back where it was
 
         JSR   PRINT_SOURCE_SUB ; it's not technically the source, but it's in
                                ; it's place, so just roll with it
         RTS
 
+* -----------------------------------------------------------------------------
+
+* -----------------------------------------------------------------------------
+* MOVEM_MEM_TO_REG
+*
+* print the arguments if we're moving from memory to registers
 * -----------------------------------------------------------------------------
 
 
@@ -181,7 +173,12 @@ MOVEM_MEM_TO_REG
 
         JSR   PRINT_SOURCE_SUB ; it's not technically the source, but it's in
                                ; it's place, so just roll with it
+
         MOVE.B    #',',(A3)+
+
+        * ----------------------------
+        * loop through the A registers
+        * ----------------------------
 
 MOVEM_MEM_TO_REG_A_LOOP
         SUBI.B    #1,D5         ; pre-decrement our counter
@@ -206,6 +203,10 @@ MOVEM_MEM_TO_REG_A_SKIP
         BRA       MOVEM_MEM_TO_REG_A_LOOP
 
 MOVEM_MEM_TO_REG_A_DONE
+
+        * ----------------------------
+        * loop through the D registers
+        * ----------------------------
 
         MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
 
@@ -232,9 +233,15 @@ MOVEM_MEM_TO_REG_D_SKIP
 
 MOVEM_MEM_TO_REG_D_DONE
 
-
         * we just printed the list of D0-D7/A0-A7, now we print the register
         MOVE.B    #$FF,-(A3)    ; backspace the last /
+                                ; we use FF because that's the default
+                                ; for never-written-before memory
 
         RTS
 
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~
