@@ -12,54 +12,6 @@ LF              EQU     $0A                 ASCII code  for line feed
 
 START:          ORG    $1000                first instruction of program
 
-*---------------------------------------
-*   THIS IS FOR TESTING, IGNORE THIS
-*---------------------------------------
-*   MOVE.W      #$2021,$13000   ; move.l  -(A1),D0
-*   MOVE.W      #$349A,$13002   ; move.w  (A2)+,(A2)
-*   MOVE.W      #$1510,$13004   ; move.b  (A0),-(A2)
-*   MOVE.W      #$2A7C,$13006   ; movea.l #$4166,A5
-*   MOVE.W      #$0000,$13008
-*   MOVE.W      #$4166,$1300A
-*   MOVE.W      #$7A4A,$1300C   ; moveq.l #$4A,D5
-*   MOVE.W      #$48E7,$1300E   ; movem.l D0-D7/A3,-(SP)
-*   MOVE.W      #$FF10,$13010
-*   MOVE.W      #$4C9F,$13012   ; movem.w (SP)+,D0-D7/A3
-*   MOVE.W      #$08FF,$13014
-*   MOVE.W      #$D842,$13016   ; add.w   D2,D4
-*   MOVE.W      #$D578,$13018   ; add.w   D2,$789A
-*   MOVE.W      #$789A,$1301A
-*   MOVE.W      #$DCB9,$1301C   ; add.l   $AAAA,D6
-*   MOVE.W      #$0000,$1301E
-*   MOVE.W      #$AAAA,$13020
-*   MOVE.W      #$DAFC,$13022   ; adda.w  #$40,A5
-*   MOVE.W      #$0040,$13024
-*   MOVE.W      #$4EB8,$13026   ; JSR     $1234
-*   MOVE.W      #$1234,$13028
-*   MOVE.W      #$4E75,$1302A   ; RTS
-*   MOVE.W      #$E404,$1302C   ; ASR.B   #2,D4
-*   MOVE.W      #$E3F8,$1302E   ; LSL.W   $5678
-*   MOVE.W      #$5678,$13030
-*   MOVE.W      #$6400,$13032   ; BCC     $13052
-*   MOVE.W      #$001E,$13034
-*   MOVE.W      #$6400,$13036   ; BCC     $13056
-*   MOVE.W      #$001E,$13038
-*   MOVE.W      #$6C00,$1303A   ; BGE     $1305A
-*   MOVE.W      #$001E,$1303C
-*   MOVE.W      #$6D00,$1303E   ; BLT     $1305E
-*   MOVE.W      #$001E,$13040
-*   MOVE.W      #$64FA,$13042   ; BCC     $13040
-*   MOVE.W      #$0644,$13044   ; ADDI.W  #$123,D4
-*   MOVE.W      #$0123,$13046   
-*   MOVE.W      #$5C44,$13048   ; ADDQ.W  #$6,D4
-*   MOVE.W      #$5043,$1304A   ; ADDQ.W  #$8,D3
-*   MOVE.W      #$0444,$1304C   ; SUBI.W  #$123,D4
-*   MOVE.W      #$0123,$1304E   
-*   MOVE.W      #$9842,$13050   ; SUB.W   D2,D4
-*   MOVE.W      #$9578,$13052   ; SUB.W   D2,$0999
-*   MOVE.W      #$0999,$13054
-*---------------------------------------
-
 *Display welcome 
                 LEA     welcome_msg,A1      load welcome message to A1
                 Move.W  #14,D0              display the string at A1

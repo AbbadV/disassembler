@@ -10,7 +10,7 @@
 * and determines which command it corresponds to
 *
 * then it runs that command's subroutine, which writes prints the dissassembled
-* code onto the screen increments IN_CURR_A
+* code onto the screen, then increments IN_CURR_A
 * -----------------------------------------------------------------------------
 
 CMD_IDENTIFY
@@ -26,6 +26,42 @@ CMD_IDENTIFY
         MOVE.B    #9,(A3)+      ; print tab character
         MOVE.L    A3,OUT_CURR_A
         MOVE.W    (A1),D1       ; D1 is the current opcode
+
+        
+        * the system we use is that each command has 2 constants associated 
+        * with it
+        
+            * ADD_P,    the (P)art of the opcode that is constant for every
+            *           possible ADD command    ( the constant bits are 1)
+                        basically the important bits of the opcode
+
+            * ADD_S,    the (S)ignature, what the important bits actually are
+
+        * so to determine what command an opcode is, first we AND it with
+        * the part to get rid of any unimportant bits, then check if it
+        * matches the signature
+
+        * for example, MOVE_P = $C000, and MOVE_S = $0000, so in order to
+        * check the opcode $349A to see if it's a MOVE, here's what we do:
+
+        * and it with MOVE_P
+
+        *   (349A)    0 0 1 1   0 1 0 0   1 0 0 1   1 0 1 0
+        *   (C000)    1 1 0 0   0 0 0 0   0 0 0 0   0 0 0 0
+
+        *             0 0 0 0   0 0 0 0   0 0 0 0   0 0 0 0
+
+        * and check to see if it matches the signature, in this case it does
+        * so it's a valid MOVE command
+
+        *             0 0 0 0   0 0 0 0   0 0 0 0   0 0 0 0
+        *   MOVE_S    0 0 0 0   0 0 0 0   0 0 0 0   0 0 0 0
+
+
+        * we have to check for commands in a specific order, because all MOVE
+        * commands are also valid MOVEA commands, but not the other way around.
+        * so we have to check for MOVEA first.
+
 
         * check ASL (memory signature)
         MOVE.W    D1,D2        ; move the value into D2 for temp storage
@@ -355,6 +391,10 @@ NEGATIVE
 
 * ------------------------------------------------------------------------------
 
+* incluuuuuuuudes
+*
+* these need to be all at the same place
+
         INCLUDE 'PRINT_SIZE_EARLY.X68'
         INCLUDE 'PRINT_SIZE_LATE.X68'
         INCLUDE 'PRINT_SOURCE.X68'
@@ -389,11 +429,5 @@ NEGATIVE
         INCLUDE 'LSR_SUB.X68'
         INCLUDE 'ROL_SUB.X68'
         INCLUDE 'ROR_SUB.X68'
-
-* BAD_COMMAND_STR DC.B  'DATA $',0
-
-* NOP_STR DC.B  'NOP',$0A,$0D,0
-* NOP_S   EQU   $4E70
-* NOP_P   EQU   $FFFF
 
 * ------------------------------------------------------------------------------
