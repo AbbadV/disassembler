@@ -1,9 +1,20 @@
-* ----------------------------------
-* THIS CHANGES D2 TO STORE THE SIZE
+* ------------------------------------------------------------------------------
+* PRINT_SIZE_EARLY_SUB
+*
+* prints the size of the command, for commands that store the size here:
+*
+*           0 1 0 1   0 1 0 1   0 1 0 1   0 1 0 1
+*               --- 
+*
+* also updates the SIZE_BUFFER, because PRINT_SOURCE and PRINT_DEST need that
+* ------------------------------------------------------------------------------
+
+* ------------------------------------------
+* THIS CHANGES SIZE_BUFFER TO STORE THE SIZE
 * 0 = Byte
 * 1 = Word
 * 2 = Long
-* ----------------------------------
+* ------------------------------------------
 
 PRINT_SIZE_EARLY_SUB
 
@@ -17,8 +28,8 @@ PRINT_SIZE_EARLY_SUB
           LSR.W     #8,D1
           LSR.W     #4,D1
 
-          * we always print the period (2E in ASCII)
-          MOVE.B    #$2E,(A3)+
+          * we always print the period
+          MOVE.B    #'.',(A3)+
 
           * switch to the correct subroutine
           CMP.B     #1,D1
@@ -30,17 +41,17 @@ PRINT_SIZE_EARLY_SUB
 
 PRINT_SIZE_EARLY_BYTE
           MOVE.B    #0,SIZE_BUFFER
-          MOVE.B    #$42,(A3)+
+          MOVE.B    #'B',(A3)+
           BRA       PRINT_SIZE_EARLY_END
 
 PRINT_SIZE_EARLY_WORD
           MOVE.B    #1,SIZE_BUFFER
-          MOVE.B    #$57,(A3)+
+          MOVE.B    #'W',(A3)+
           BRA       PRINT_SIZE_EARLY_END
 
 PRINT_SIZE_EARLY_LONG
           MOVE.B    #2,SIZE_BUFFER
-          MOVE.B    #$4C,(A3)+
+          MOVE.B    #'L',(A3)+
           BRA       PRINT_SIZE_EARLY_END
 
 PRINT_SIZE_EARLY_END
