@@ -1,0 +1,58 @@
+# disassembler
+CSS 422 Hardware project
+
+Run disassembler from main.X68. Test code from OPCODE_TEST.X68 will be ORGed starting from address 7000 to 7568. 
+Decodes instructions one screen at a time and then asks user if they would like to decode more. 
+
+
+Heirarchy:
+
+main.X68
+  |
+CmdIdentify.X68
+  |
+(COMMAND NAME)_SUB.X68
+  |
+PRINT_HELPERS.X68
+
+
+Necessary files:
+
+main.X68
+CmdIdentify.X68
+CONSTANTS.X68
+OPCODE_TEST.X68
+PRINT_SIZE_EARLY.X68
+PRINT_SIZE_LATE.X68
+PRINT_SOURCE.X68
+PRINT_DEST.X68
+PRINT_NUM.X68
+BAD_COMMAND.X68
+SUBI_SUB.X68
+ADDI_SUB.X68
+MOVEA_SUB.X68
+MOVE_SUB.X68
+NOP_SUB.X68
+RTS_SUB.X68
+JSR_SUB.X68
+MOVEM_SUB.X68
+LEA_SUB.X68
+ADDQ_SUB.X68
+BRA_SUB.X68
+BCC_SUB.X68
+BGE_SUB.X68
+BLT_SUB.X68
+MOVEQ_SUB.X68
+DIVU_SUB.X68
+SUB_SUB.X68
+MULS_SUB.X68
+AND_SUB.X68
+OR_SUB.X68
+ADD_SUB.X68
+ADDA_SUB.X68
+ASL_SUB.X68
+ASR_SUB.X68
+LSL_SUB.X68
+LSR_SUB.X68
+ROL_SUB.X68
+ROR_SUB.X68
