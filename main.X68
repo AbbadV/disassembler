@@ -279,6 +279,7 @@ EVEN            MOVE.B   #1,D2               input is even ,mark D1=1
 INPUT_ODD       LEA      EVEN_CHECK_MSG,A1   load odd address enteresd msg
                 MOVE    #14,D0               dispaly string at A1
                 TRAP    #15                  run task 14
+                BRA     RD_START_INPUT       ask user for address input again
                 
 * Put variables and constants here
    * INCLUDE 'opcode_subroutine.x68'
@@ -317,6 +318,7 @@ SIZE_BUFFER          ds.b    1         allocate a byte for the current size of t
      
 
     END    START        ; last line of source
+
 
 *~Font name~Courier New~
 *~Font size~10~
