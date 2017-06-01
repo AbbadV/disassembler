@@ -131,3 +131,6 @@ LSR_S   EQU     $E008
 LSR_P   EQU     $E118
 LSRM_S   EQU     $E2C0
 LSRM_P   EQU     $FFC0
+
+SUBA_P  EQU     $F0C0
+SUBA_S  EQU     $90C0
