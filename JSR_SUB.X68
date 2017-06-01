@@ -31,48 +31,9 @@ JSR_COPY
 JSR_DONE
 
         MOVE.B    #9,(A3)+      ;print tab character 
-        MOVE.B    #'$',(A3)+    ;print '$' character
+        JSR PRINT_SOURCE_SUB    ;print source
 
-        MOVE.L D1,D4            ;copy actual op code to D4
-        MOVE.L  #0,D3           ;clear D3 for later use
-        
-        AND #1,D4               ;mask off unwanted bits
-        CMP #0,D4               ; check if D4 is zero
-        BEQ JSR_ABSW            ; go to JSR_ABSW if it is 0
-        
-JSR_ABSL        JSR JSR_GETBYTE   ; go to JSR_GETBYTE
-                  ADDQ.B    #1,D3   ;increment D3
-                  CMP.B     #4,D3    ; check if D3 is 4
-                  BNE   JSR_ABSL     ; do the loop again if d3 is not 4
-                  BRA JSR_FINISH     ; jump to printing output
-
-JSR_ABSW    JSR JSR_GETBYTE
-                  ADDQ.B    #1,D3       ; increment D3 by 1
-                  CMP.B     #2,D3       ; is d3 2?
-                  BNE   JSR_ABSW        ; not 3 , loop again
-                  BRA JSR_FINISH        ; jump to printing output
-                                
-JSR_GETBYTE
-    MOVE.B  (A1)+,D5            ; copy A1 to D5 and increment A1
-    MOVE.B  D5,D6               ; copy D5 to D6
-    AND.B   #$F0,D6             ; mask off unwanted bits
-    LSR.B   #4,D6               ; shift right by 4
-    JSR JSR_CONVERT             ; jump to convert ASCII to hex
-    MOVE.B  D6,(A3)+            ; print d6 and increment output pointer
-    MOVE.B  D5,D6               ; copy d5 to d6 
-    AND.B   #$F,D6              ; mask off unwanted bits
-    JSR JSR_CONVERT             ; convert to hex 
-    MOVE.B  D6,(A3)+            ;print D6 and increment output pointer
-    RTS
-JSR_CONVERT
-    CMP.B   #10,D6              ; check if D6 is a digit 
-    BLT JSR_DIGIT               ; d6 is a digit , jump to digit converter 
-    ADD.B   #$37,D6             ; convert letter to hex 
-    RTS                         ; return
-JSR_DIGIT                        
-    ADD.B #$30,D6               ; convert number to hex
-    RTS                         ; return
-
+      
 JSR_FINISH
         MOVE.B  #$A,(A3)+       ; print line feed
         MOVE.B  #$D,(A3)+       ; print carriage return
@@ -84,6 +45,7 @@ JSR_FINISH
         RTS       ; return
 
 *------------------------------------------------------------------------------
+
 
 
 

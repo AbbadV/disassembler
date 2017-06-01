@@ -11,8 +11,9 @@ BRA_SUB
         *
         MOVEA.L   #0,A1             ; load the current opcode into a register
         MOVEA.L   IN_CURR_A,A1      ; move the current input pointer to A1
-        MOVE.L  A1,D3               ; move the current op code address to D3
-        ADDQ.L  #2,D3               ; increment D3 by 2
+        MOVEQ.L  #$0,D3
+        MOVE.W  A1,D3               ; move the current op code address to D3
+        ADDQ.W  #2,D3               ; increment D3 by 2
         MOVE.W    (A1)+,D1          ; not necessary here, but for other cmds
 
         MOVEA.L   #0,A3             ; clear A3 for later use
@@ -31,12 +32,17 @@ BRA_COPY
         BRA       BRA_COPY      ; do it again
         
 BRA_DONE
+        *MOVE.B  D1,D2           ; copy actual op code to D2
+        
         MOVE.B  D1,D2           ; copy actual op code to D2
         AND.W   #$FF,D2         ; mask off unwanted bits         
         CMP #0,D2               ; check to see if D2 is 0
         BEQ BRA_GETWORD         ; its 0 , go to BRA_GETWORD
 
-
+        MOVE.B  #'.',(A3)+
+        MOVE.B  #'B',(A3)+
+        MOVE.B  #$09,(A3)+
+        MOVE.B  #'$',(A3)+
         MOVE.B  D1,D6           ;copy the op code to D6
         ADD.B   D3,D6           ; add d3 to d6 and store it in D6
         MOVE.B D6,D3            ;copy d6 to d3
@@ -61,11 +67,16 @@ BRA_FINISH
 
 *------------------------------------------------------------------------------
 BRA_GETWORD
+        MOVE.B  #'.',(A3)+
+        MOVE.B  #'W',(A3)+ 
+        MOVE.B  #$09,(A3)+
+        MOVE.B  #'$',(A3)+
         MOVE.L #0,D2            ; clear d2 for later use 
         MOVE.W  (A1)+,D2        ; move current op code address to D2 and increment address
-        ADD.L   D3,D2           ; add d3 to d2
-        MOVE.L  D2,D1           ; copy d2 to d1
+        ADD.W   D3,D2           ; add d3 to d2
+        MOVE.W  D2,D1           ; copy d2 to d1
         BRA BRA_FINISH          ; done here , go to printing output
+
 
 
 

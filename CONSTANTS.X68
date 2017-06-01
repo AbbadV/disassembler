@@ -38,7 +38,7 @@ LEA_STR    DC.B   'LEA',0
 LEA_S      EQU    $41C0
 LEA_P      EQU    $F1C0
 
-BRA_STR    DC.B  'BRA',$09,'$',0
+BRA_STR    DC.B  'BRA',0
 BRA_S      EQU   $6000
 BRA_P      EQU   $FF00
 
@@ -86,15 +86,15 @@ OR_STR     DC.B  'OR',0
 OR_S       EQU   $8000
 OR_P       EQU   $F000
 
-BCC_STR DC.B    'BCC',$09,'$',0
+BCC_STR DC.B    'BCC',0
 BCC_S   EQU     $6400
 BCC_P   EQU     $FF00
 
-BGE_STR DC.B    'BGE',$09,'$',0
+BGE_STR DC.B    'BGE',0
 BGE_S   EQU     $6C00
 BGE_P   EQU     $FF00
 
-BLT_STR DC.B    'BLT',$09,'$',0
+BLT_STR DC.B    'BLT',0
 BLT_S   EQU     $6D00
 BLT_P   EQU     $FF00
 
@@ -135,6 +135,7 @@ LSR_S   EQU     $E008
 LSR_P   EQU     $E118
 LSRM_S   EQU     $E2C0
 LSRM_P   EQU     $FFC0
+
 
 
 
