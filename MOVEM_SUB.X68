@@ -92,66 +92,9 @@ MOVEM_REG_TO_MEM
         MOVE.W    (A1)+,D4      ; D4 is the next word (which registers to move)
         MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
 
-        * ----------------------------
-        * loop through the D registers
-        * ----------------------------
+        JSR   MOVEM_PRINT_REGISTER_LIST
 
-MOVEM_REG_TO_MEM_D_LOOP
-        SUBI.B    #1,D5         ; pre-decrement our counter
-
-        MOVE.W    D4,D6         ; isolate the current bit
-        LSR.W     #8,D6
-        LSR.W     D5,D6
-        ANDI.B    #1,D6
-        TST.B     D6            ; if it's 0, that register's not present
-                                ; so skip
-        BEQ       MOVEM_REG_TO_MEM_D_SKIP
-
-        MOVE.B    #'D',(A3)+    ; print a D
-        MOVE.B    #'7',D7       ; start with ASCII 7
-        SUB.B     D5,D7         ; subtract to get the real ASCII char
-        MOVE.B    D7,(A3)+      ; print it
-        MOVE.B    #'/',(A3)+
-
-MOVEM_REG_TO_MEM_D_SKIP
-        TST.B     D5            ; if out counter's 0, exit the loop
-        BEQ       MOVEM_REG_TO_MEM_D_DONE
-        BRA       MOVEM_REG_TO_MEM_D_LOOP
-
-MOVEM_REG_TO_MEM_D_DONE
-
-        * ----------------------------
-        * loop through the A registers
-        * ----------------------------
-
-        MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
-
-MOVEM_REG_TO_MEM_A_LOOP
-        SUBI.B    #1,D5         ; pre-decrement our counter
-
-        MOVE.W    D4,D6         ; isolate the current bit
-        LSR.W     D5,D6
-        ANDI.B    #1,D6
-        TST.B     D6            ; if it's 0, that register's not present
-                                ; so skip
-        BEQ       MOVEM_REG_TO_MEM_A_SKIP
-
-        MOVE.B    #'A',(A3)+    ; print a A
-        MOVE.B    #'7',D7       ; start with ASCII 7
-        SUB.B     D5,D7         ; subtract to get the real ASCII char
-        MOVE.B    D7,(A3)+      ; print it
-        MOVE.B    #'/',(A3)+
-
-MOVEM_REG_TO_MEM_A_SKIP
-        TST.B     D5
-        BEQ       MOVEM_REG_TO_MEM_A_DONE
-        BRA       MOVEM_REG_TO_MEM_A_LOOP
-
-MOVEM_REG_TO_MEM_A_DONE
-
-        * we just printed the list of D0-D7/A0-A7, now we print the register
-        MOVE.B    #',',-(A3)    ; overwrite the last /
-        MOVE.B    #',',(A3)+    ; put A3 back where it was
+        MOVE.B    #',',(A3)+
 
         JSR   PRINT_SOURCE_SUB ; it's not technically the source, but it's in
                                ; it's place, so just roll with it
@@ -168,7 +111,6 @@ MOVEM_REG_TO_MEM_A_DONE
 
 MOVEM_MEM_TO_REG
         MOVE.W    (A1)+,D4      ; D4 is the next word (which registers to move)
-        MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
         MOVE.L    A1,IN_CURR_A  ; move the current A1 back to the input pointer
 
         JSR   PRINT_SOURCE_SUB ; it's not technically the source, but it's in
@@ -176,11 +118,45 @@ MOVEM_MEM_TO_REG
 
         MOVE.B    #',',(A3)+
 
+        JSR   MOVEM_PRINT_REGISTER_LIST
+
+        RTS
+
+* -----------------------------------------------------------------------------
+
+* -----------------------------------------------------------------------------
+* MOVEM_PRINT_REGISTER_LIST
+*
+* print the registers separated by a / (so A7/A6/A5/D7/D1  etc.)
+* -----------------------------------------------------------------------------
+
+MOVEM_PRINT_REGISTER_LIST
+
+        * -------------------------------------------------------------------
+        * we need to make check if we're doing pre-decrement
+        * (the mode or bits 0038 are 100), otherwise we do the other function
+        * because when doing pre-decrement the list is backwards
+        * -------------------------------------------------------------------
+
+        MOVE.W    D1,D5         ; we're using D5 as a temporary buffer
+        LSR.B     #3,D5         ; isolate the mode
+        AND.B     #7,D5
+        CMP.B     #4,D5         ; if it's 4, we're doing -(An), so run 
+                                ; the other subroutine not this one
+        BNE       MOVEM_PRINT_REGISTER_NOT_PRED
+
+        JSR       MOVEM_PRINT_REGISTER_LIST_PRED 
+        RTS
+
+MOVEM_PRINT_REGISTER_NOT_PRED
+
+        MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
+
         * ----------------------------
         * loop through the A registers
         * ----------------------------
 
-MOVEM_MEM_TO_REG_A_LOOP
+MOVEM_REG_LIST_A_LOOP
         SUBI.B    #1,D5         ; pre-decrement our counter
 
         MOVE.W    D4,D6         ; isolate the current bit
@@ -189,7 +165,7 @@ MOVEM_MEM_TO_REG_A_LOOP
         ANDI.B    #1,D6
         TST.B     D6            ; if it's 0, that register's not present
                                 ; so skip
-        BEQ       MOVEM_MEM_TO_REG_A_SKIP
+        BEQ       MOVEM_REG_LIST_A_SKIP
 
         MOVE.B    #'A',(A3)+    ; print a A
         MOVE.B    #'0',D7       ; start with ASCII 7
@@ -197,12 +173,12 @@ MOVEM_MEM_TO_REG_A_LOOP
         MOVE.B    D7,(A3)+      ; print it
         MOVE.B    #'/',(A3)+
 
-MOVEM_MEM_TO_REG_A_SKIP
+MOVEM_REG_LIST_A_SKIP
         TST.B     D5
-        BEQ       MOVEM_MEM_TO_REG_A_DONE
-        BRA       MOVEM_MEM_TO_REG_A_LOOP
+        BEQ       MOVEM_REG_LIST_A_DONE
+        BRA       MOVEM_REG_LIST_A_LOOP
 
-MOVEM_MEM_TO_REG_A_DONE
+MOVEM_REG_LIST_A_DONE
 
         * ----------------------------
         * loop through the D registers
@@ -210,7 +186,7 @@ MOVEM_MEM_TO_REG_A_DONE
 
         MOVE.B    #8,D5         ; D5 is our counter (it starts at 8)
 
-MOVEM_MEM_TO_REG_D_LOOP
+MOVEM_REG_LIST_D_LOOP
         SUBI.B    #1,D5         ; pre-decrement our counter
 
         MOVE.W    D4,D6         ; isolate the current bit
@@ -218,7 +194,7 @@ MOVEM_MEM_TO_REG_D_LOOP
         ANDI.B    #1,D6
         TST.B     D6            ; if it's 0, that register's not present
                                 ; so skip
-        BEQ       MOVEM_MEM_TO_REG_D_SKIP
+        BEQ       MOVEM_REG_LIST_D_SKIP
 
         MOVE.B    #'D',(A3)+    ; print a D
         MOVE.B    #'0',D7       ; start with ASCII 7
@@ -226,17 +202,98 @@ MOVEM_MEM_TO_REG_D_LOOP
         MOVE.B    D7,(A3)+      ; print it
         MOVE.B    #'/',(A3)+
 
-MOVEM_MEM_TO_REG_D_SKIP
+MOVEM_REG_LIST_D_SKIP
         TST.B     D5
-        BEQ       MOVEM_MEM_TO_REG_D_DONE
-        BRA       MOVEM_MEM_TO_REG_D_LOOP
+        BEQ       MOVEM_REG_LIST_D_DONE
+        BRA       MOVEM_REG_LIST_D_LOOP
 
-MOVEM_MEM_TO_REG_D_DONE
+MOVEM_REG_LIST_D_DONE
 
-        * we just printed the list of D0-D7/A0-A7, now we print the register
+        * we just printed the list of D0-D7/A0-A7, now we're done
         MOVE.B    #$FF,-(A3)    ; backspace the last /
                                 ; we use FF because that's the default
                                 ; for never-written-before memory
+
+        RTS
+
+* -----------------------------------------------------------------------------
+
+* -----------------------------------------------------------------------------
+* MOVEM_PRINT_REGISTER_LIST_PRED
+*
+* print the registers separated by a / (so A7/A6/A5/D7/D1  etc.)
+*
+* the order is reversed if the register is pre-decremented ( -(A1) )
+* -----------------------------------------------------------------------------
+
+MOVEM_PRINT_REGISTER_LIST_PRED
+
+        MOVE.B    #0,D5         ; D5 is our counter (it starts at 0)
+
+        * ----------------------------
+        * loop through the D registers
+        * ----------------------------
+
+MOVEM_REG_LIST_PRED_D_LOOP
+        MOVE.W    D4,D6         ; isolate the current bit
+        ROL.W     #1,D6
+        ROL.W     D5,D6
+        ANDI.B    #1,D6
+        TST.B     D6            ; if it's 0, that register's not present
+                                ; so skip
+        BEQ       MOVEM_REG_LIST_PRED_D_SKIP
+
+        MOVE.B    #'D',(A3)+    ; print a D
+        MOVE.B    #'0',D7       ; start with ASCII 7
+        ADD.B     D5,D7         ; subtract to get the real ASCII char
+        MOVE.B    D7,(A3)+      ; print it
+        MOVE.B    #'/',(A3)+
+
+MOVEM_REG_LIST_PRED_D_SKIP
+        ADDI.B    #1,D5         ; increment our counter
+
+        CMP.B     #8,D5
+        BEQ       MOVEM_REG_LIST_PRED_D_DONE
+        BRA       MOVEM_REG_LIST_PRED_D_LOOP
+
+MOVEM_REG_LIST_PRED_D_DONE
+
+        * ----------------------------
+        * loop through the A registers
+        * ----------------------------
+
+        MOVE.B    #0,D5         ; D5 is our counter (it starts at 0)
+
+MOVEM_REG_LIST_PRED_A_LOOP
+        MOVE.W    D4,D6         ; isolate the current bit
+        ROL.W     #8,D6
+        ROL.W     #1,D6
+        ROL.W     D5,D6
+        ANDI.B    #1,D6
+        TST.B     D6            ; if it's 0, that register's not present
+                                ; so skip
+        BEQ       MOVEM_REG_LIST_PRED_A_SKIP
+
+        MOVE.B    #'A',(A3)+    ; print a A
+        MOVE.B    #'0',D7       ; start with ASCII 7
+        ADD.B     D5,D7         ; subtract to get the real ASCII char
+        MOVE.B    D7,(A3)+      ; print it
+        MOVE.B    #'/',(A3)+
+
+MOVEM_REG_LIST_PRED_A_SKIP
+        ADDI.B    #1,D5         ; increment our counter
+
+        CMP.B     #8,D5
+        BEQ       MOVEM_REG_LIST_PRED_A_DONE
+        BRA       MOVEM_REG_LIST_PRED_A_LOOP
+
+MOVEM_REG_LIST_PRED_A_DONE
+
+        * we just printed the list of D0-D7/A0-A7, now we're done
+        MOVE.B    #$FF,-(A3)    ; backspace the last /
+                                ; we use FF because that's the default
+                                ; for never-written-before memory
+
 
         RTS
 
