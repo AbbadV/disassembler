@@ -188,7 +188,7 @@ CMD_IDENTIFY
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
-
+        
         * check LEA
         MOVE.W    D1,D2         ; move the value into D2 for temp storage
         MOVE.W    #LEA_P,D3    ; move values into registers for CMD_CHECK
@@ -196,7 +196,7 @@ CMD_IDENTIFY
         MOVE.W    #LEA_SUB,D5
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
-        BEQ       END_IDENTIFY  ; skip to the end if it's equal 
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal         
 
         * check ADDQ
         MOVE.W    D1,D2         ; move the value into D2 for temp storage
@@ -266,6 +266,15 @@ CMD_IDENTIFY
         MOVE.W    #OR_P,D3     ; move values into registers for CMD_CHECK
         MOVE.W    #OR_S,D4  
         MOVE.W    #OR_SUB,D5
+        JSR       CMD_CHECK
+        CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
+        BEQ       END_IDENTIFY  ; skip to the end if it's equal
+
+        * check SUBA (not required, goes to BAD_COMMAND instead)
+        MOVE.W    D1,D2        ; move the value into D2 for temp storage
+        MOVE.W    #SUBA_P,D3   ; move values into registers for CMD_CHECK
+        MOVE.W    #SUBA_S,D4  
+        MOVE.W    #BAD_COMMAND_SUB,D5
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal

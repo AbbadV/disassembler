@@ -137,8 +137,8 @@ LSRM_S   EQU     $E2C0
 LSRM_P   EQU     $FFC0
 
 
-
-
+SUBA_P  EQU     $F0C0
+SUBA_S  EQU     $90C0
 
 *~Font name~Courier New~
 *~Font size~10~
