@@ -31,6 +31,8 @@ RD_START_INPUT  LEA     START_ADD_MSG,A1    load start address request msg
                 BEQ     CONTINUE_START1     length ok ,keep on reading input 
                 JSR     INVALID_INP_ST       bad input length , display error and start over    
 CONTINUE_START1 JSR     CONVERT             go to conversion subroutine
+                TST.B   IS_VALID_INPUT      if convert failed, print an error and go back
+                BNE     INVALID_INP_ST
                 JSR     MIN_MAX_CHECK       check if input is within the min& max limit for address 
                 CMP.B   #1,D2               is input address within allowable interval
                 BEQ     CONTINUE_START2     input is within limits, keep reading
@@ -55,6 +57,8 @@ RD_END_INPUT    LEA     END_ADD_MSG,A1      load end address request msg
                 JSR     INVALID_INP_ED
                 
 CONTINUE_END1   JSR     CONVERT             go to conversion subroutine
+                TST.B   IS_VALID_INPUT      if convert failed, print an error and go back
+                BNE     INVALID_INP_ED
                 JSR     MIN_MAX_CHECK       check if input is within the min& max limit for address 
                 CMP.B   #1,D2               is input address within allowable interval
                 BEQ     CONTINUE_END2     input is within limits, keep reading
@@ -218,9 +222,13 @@ INVALID_INP_ST  LEA     INPUT_ERROR_MSG,A1  load input error message to A1
 INVALID_INP_ED  LEA     INPUT_ERROR_MSG,A1  load input error message to A1
                 MOVE.W  #14,D0              print data in d0 to screen 
                 TRAP    #15                 run task 14
-                BRA     RD_END_INPUT      prompt user for input again
+                BRA     RD_END_INPUT        prompt user for input again
+
+
 *convert to ASCII
-CONVERT         CLR.L    D6
+CONVERT         CLR.L   D6
+                MOVE.B  #0,IS_VALID_INPUT
+
 CNV_LOOP        CMP.B   #0,D1              are all characters of the input are converted?
                 BEQ     FINISH 
                 CLR.L   D4                 use cleared d4 for input storage
@@ -228,9 +236,20 @@ CNV_LOOP        CMP.B   #0,D1              are all characters of the input are c
                 CMPI.B   #$39,D4           subtract $39 from character to check if its a digit                   
                 BLE     DIGIT_TO_HEX       use digit converter character is less than or equal to $39
                 BGT     ALPHA_TO_HEX
+
 FINISH          RTS                
+
 *convert num to hex                
 ALPHA_TO_HEX    SUBI.B  #$37,D4            convert alpahbet to hex number, keep it in D4
+                CMP.B   #$20,D4
+                BLT     ALPHA_TO_HEX_UPPERCASE
+                SUBI.B  #$20,D4            if it's a lower case number, convert it to uppercase
+ALPHA_TO_HEX_UPPERCASE
+
+                CMP.B   #$A,D4             check if the digit is valid (A-F)
+                BLT     CONVERT_ERROR
+                CMP.B   #$F,D4
+                BGT     CONVERT_ERROR
                 BRA     KEEP_COUNT         manage the unconverted count 
            
 *convert letters to hex
@@ -245,6 +264,12 @@ KEEP_COUNT      ADD.B   D4,D6              save the conversion in the hex holder
                 ASL.L   #4,D6              shift d4 contents left by 4 to receive next input
                 ADD.B   D5,D6              adjust zeros 
                 BRA     CNV_LOOP           updating the count is done go back to convert
+
+CONVERT_ERROR
+                MOVE.B  #1,IS_VALID_INPUT
+                RTS
+
+
                 
 * check if user input is between the interval [$7000,FFFFFE]
                 
@@ -279,7 +304,6 @@ EVEN            MOVE.B   #1,D2               input is even ,mark D1=1
 INPUT_ODD       LEA      EVEN_CHECK_MSG,A1   load odd address enteresd msg
                 MOVE    #14,D0               dispaly string at A1
                 TRAP    #15                  run task 14
-                BRA     RD_START_INPUT       ask user for address input again
                 
 * Put variables and constants here
    * INCLUDE 'opcode_subroutine.x68'
@@ -288,6 +312,7 @@ INPUT_ODD       LEA      EVEN_CHECK_MSG,A1   load odd address enteresd msg
     *INCLUDE 'variables.x68'
     *INCLUDE 'strings.x68'
     INCLUDE     'CmdIdentify.X68'
+    *INCLUDE     'OPCODE_TEST.X68'
                 
 WELCOME_MSG          dc.b    'Welcome to the MC68000 Microprocessor Disassembler',CR,LF,0   
 START_ADD_MSG        dc.b    'Please enter Start memory address in hexadecimal: ',0
@@ -307,21 +332,17 @@ OUT_START_A          ds.b    4         allocate 4 bytes of memory to store start
 OUT_CURR_A           ds.b    4         allocate 4 bytes of memory to store current program output
 IS_VALID             ds.b    1         allocate a byte for whether for error checking
 SIZE_BUFFER          ds.b    1         allocate a byte for the current size of the op-code
+IS_VALID_INPUT       ds.b    1         allocate a byte for storing whether ot not an input number is valid
       
 
     INCLUDE 'CONSTANTS.X68'
-    INCLUDE 'OPCODE_TEST.X68'
- 
+
         
 
      *SIMHALT             ; halt simulator
      
 
     END    START        ; last line of source
-
-
-
-
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

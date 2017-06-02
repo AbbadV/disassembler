@@ -1,5 +1,19 @@
     ORG    $7000
 MAIN    
+
+    RESET
+    ANDI    #$0, D0
+    BSET    D0,D1
+    ORI     #$1, D0
+    RTE     
+    RTR
+    JMP     THEEND
+    CHK     D0,D1
+    CMP     D0,D1
+    EOR     D0,D1
+    SUBA    D1,A1
+
+    
     *NOP
     NOP
     
@@ -421,6 +435,9 @@ THEEND    RTS
     
 
     
+
+
+
 
 
 

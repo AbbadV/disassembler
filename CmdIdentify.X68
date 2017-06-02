@@ -140,6 +140,11 @@ CMD_IDENTIFY
         MOVE.W    #MOVEA_P,D3    ; move values into registers for CMD_CHECK
         MOVE.W    #MOVEA_S,D4  
         MOVE.W    #MOVEA_SUB,D5
+        MOVE.W    #$F000,D7
+        AND.W     D7,D2
+        CMP.W     #$0000,D2
+        BEQ       JUMP_BAD_COMMAND  
+        MOVE.W    D1,D2         ; move the value into D2 for temp storage
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
@@ -149,6 +154,11 @@ CMD_IDENTIFY
         MOVE.W    #MOVE_P,D3    ; move values into registers for CMD_CHECK
         MOVE.W    #MOVE_S,D4  
         MOVE.W    #MOVE_SUB,D5
+        MOVE.W    #$F000,D7
+        AND.W     D7,D2
+        CMP.W     #$0000,D2
+        BEQ       JUMP_BAD_COMMAND  
+        MOVE.W    D1,D2         ; move the value into D2 for temp storage        
         JSR       CMD_CHECK
         CMP.B     #1,D6         ; check the answer CMD_CHECK gave us
         BEQ       END_IDENTIFY  ; skip to the end if it's equal
@@ -380,6 +390,7 @@ CMD_IDENTIFY
 
 
         * if we hit here it's not a valid command
+JUMP_BAD_COMMAND        
         JSR       BAD_COMMAND_SUB
 
 END_IDENTIFY
@@ -450,6 +461,9 @@ NEGATIVE
         INCLUDE 'ROR_SUB.X68'
 
 * ------------------------------------------------------------------------------
+
+
+
 
 
 *~Font name~Courier New~
