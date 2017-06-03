@@ -1,4 +1,8 @@
-    ORG    $7000
+start		EQU	$00007000	* ORG and END address
+
+* ORG the program so that it straddles the address boundary $00007FFF to $00008000
+
+		ORG	start
 MAIN    
 
     RESET
@@ -433,8 +437,16 @@ ALMOSTTHEEND    NOP
     *RTS
 THEEND    RTS
     
+* Put program code here
 
+    SIMHALT             ; halt simulator
+
+* Put variables and constants here
+
+    END    START        ; last line of source
     
+
+
 
 
 

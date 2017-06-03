@@ -312,8 +312,7 @@ INPUT_ODD       LEA      EVEN_CHECK_MSG,A1   load odd address enteresd msg
     *INCLUDE 'variables.x68'
     *INCLUDE 'strings.x68'
     INCLUDE     'CmdIdentify.X68'
-    *INCLUDE     'OPCODE_TEST.X68'
-                
+                   
 WELCOME_MSG          dc.b    'Welcome to the MC68000 Microprocessor Disassembler',CR,LF,0   
 START_ADD_MSG        dc.b    'Please enter Start memory address in hexadecimal: ',0
 END_ADD_MSG          dc.b    'Please enter End address in hexadecimal(greater than start address): ',0
@@ -337,12 +336,15 @@ IS_VALID_INPUT       ds.b    1         allocate a byte for storing whether ot no
 
     INCLUDE 'CONSTANTS.X68'
 
-        
+    
 
      *SIMHALT             ; halt simulator
      
 
     END    START        ; last line of source
+
+
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~
